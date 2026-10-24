@@ -1,4 +1,5 @@
-"""Claude answers a question by searching the manual first (a tool-use loop), and the answer is streamed back."""
+"""Claude answers a question by searching the manual (a tool-use loop) and streams an answer that cites the
+manual paragraph by paragraph."""
 
 from __future__ import annotations
 
@@ -53,10 +54,12 @@ class Chat:
     async def answer(self, question: str, out: dict) -> AsyncIterator[dict]:
         """Answer one question and yield events for the browser:
             status   the search Claude is running
-            text     answer text
+            text     answer text, with [n] markers after cited passages
             retract  drop the text so far: it was narration before a search, not the answer
-        Fills `out` with the answer and the number of searches."""
+            sources  the numbered list of cited sections
+        Fills `out` with the answer, the sources and the number of searches."""
         messages = [{"role": "user", "content": question}]
+        sources: dict[str, dict] = {}   # source URL -> {n, source, title, cited_text}
         answer: list[str] = []
         out.update(searches=0)
 
@@ -67,11 +70,36 @@ class Chat:
                 request["thinking"] = thinking
             if round_no == self.cfg.max_searches:
                 request["tool_choice"] = {"type": "none"}  # enough searching: answer now
+            cited: list[int] = []     # source numbers cited by the text block being streamed
+            on_line: set[int] = set()  # markers already shown on the current line (e.g. one table row)
+            pending = ""               # trailing whitespace held back so a marker can go before it
             async with self.client.messages.stream(**request) as stream:
                 async for event in stream:
                     if event.type == "content_block_delta" and event.delta.type == "text_delta":
-                        answer.append(event.delta.text)
-                        yield {"type": "text", "text": event.delta.text}
+                        text = pending + event.delta.text
+                        pending = text[len(text.rstrip()):]
+                        if text := text.rstrip():
+                            if "\n" in text:
+                                on_line.clear()
+                            answer.append(text)
+                            yield {"type": "text", "text": text}
+                    elif event.type == "content_block_delta" and event.delta.type == "citations_delta":
+                        c = event.delta.citation
+                        src = sources.setdefault(c.source, {"n": len(sources) + 1, "source": c.source,
+                                                            "title": c.title, "cited_text": []})
+                        if c.cited_text not in src["cited_text"]:
+                            src["cited_text"].append(c.cited_text)
+                        cited.append(src["n"])
+                    elif event.type == "content_block_stop" and event.content_block.type == "text":
+                        marks = [n for n in dict.fromkeys(cited) if n not in on_line]
+                        text = "".join(f"[{n}]" for n in marks) + pending
+                        on_line.update(marks)
+                        if "\n" in pending:
+                            on_line.clear()
+                        cited, pending = [], ""
+                        if text:
+                            answer.append(text)
+                            yield {"type": "text", "text": text}
                     elif event.type == "content_block_stop" and event.content_block.type == "tool_use":
                         query = (event.content_block.input or {}).get("query", "")
                         yield {"type": "status", "text": f"Searching the manual for “{query}”…"}
@@ -95,3 +123,5 @@ class Chat:
                 for call in calls]})
 
         out["answer"] = "".join(answer).strip()
+        out["sources"] = sorted(sources.values(), key=lambda s: s["n"])
+        yield {"type": "sources", "sources": out["sources"]}

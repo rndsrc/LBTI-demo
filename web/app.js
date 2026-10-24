@@ -10,6 +10,22 @@
     msg.body.textContent = msg.raw;
   }
 
+  function showSources(msg) {
+    if (!msg.sources.length) return;
+    const list = el("ol");
+    for (const s of msg.sources) {
+      const a = el("a", "", s.title);
+      a.href = s.source;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      const item = el("li");
+      item.value = s.n;
+      item.append(a);
+      list.append(item);
+    }
+    msg.box.append(el("h4", "", "Sources"), list);
+  }
+
   // Server-sent events from a fetch() response body.
   async function* events(response) {
     const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
@@ -37,7 +53,7 @@
     $("messages").append(el("li", "user", question));
     const box = el("li", "assistant");
     const status = el("p", "status", "Searching the manual…");
-    const msg = { box, body: el("div", "answer"), raw: "" };
+    const msg = { box, body: el("div", "answer"), raw: "", sources: [] };
     box.append(status, msg.body);
     $("messages").append(box);
     box.scrollIntoView({ block: "end" });
@@ -54,9 +70,11 @@
         if (event === "status") { status.hidden = false; status.textContent = data.text; }
         else if (event === "retract") msg.raw = "";
         else if (event === "text") { status.hidden = true; msg.raw += data.text; }
+        else if (event === "sources") msg.sources = data.sources;
         else if (event === "error") throw new Error(data.message);
         render(msg);
       }
+      showSources(msg);
     } catch (err) {
       status.hidden = true;
       box.append(el("p", "error", err.name === "AbortError" ? "Stopped." : err.message));

@@ -15,10 +15,12 @@ def test_nomic_ranks_the_nomic_filters_section_first(cfg):
     assert manual.search("zzzqqq") == []
 
 
-def test_search_tool_returns_sections_as_text(cfg):
+def test_search_tool_returns_citable_sections(cfg):
     manual = Manual(cfg.index_dir)
-    first = manual.run_tool({"query": "Br-alpha"})[0]
-    assert first["type"] == "text" and first["text"].startswith(
-        "## Instrument Characteristics › LMIRCam Filters › Narrowband filters\n"
-        "https://example.test/lbti/instrument-characteristics/lmircam-filters/#TOC-Narrowband-filters\n\n")
+    result = manual.run_tool({"query": "Br-alpha"})[0]
+    assert result["type"] == "search_result" and result["citations"] == {"enabled": True}
+    assert result["source"] == "https://example.test/lbti/instrument-characteristics/lmircam-filters/#TOC-Narrowband-filters"
+    assert result["title"] == "Instrument Characteristics › LMIRCam Filters › Narrowband filters"
+    assert [b["text"] for b in result["content"]][1] == "LMIRCam can be used together with NOMIC through the dichroic."
     assert manual.run_tool({"query": "zzzqqq"}) == [{"type": "text", "text": "No matching sections found."}]
+    assert manual.run_tool({}) == [{"type": "text", "text": "No matching sections found."}]

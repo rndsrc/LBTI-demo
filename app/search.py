@@ -16,7 +16,7 @@ typically many much need needed get find any all some kind type types here use u
 SEARCH_TOOL = {
     "name": "search_manual",
     "description": "Search the LBTI User's Manual (LBTO web pages and the PDF manual). Returns the most relevant "
-                   "sections. Use specific terms (instrument, filter, mode, "
+                   "sections, split into citable paragraphs. Use specific terms (instrument, filter, mode, "
                    "quantity); search again with other words if the results do not answer the question.",
     "input_schema": {"type": "object", "required": ["query"], "properties": {
         "query": {"type": "string", "description": "e.g. 'NOMIC N-band filters' or 'nulling overheads'"}}},
@@ -47,9 +47,10 @@ class Manual:
         return [self.sections[sid] for (sid,) in rows]
 
     def run_tool(self, args: dict) -> list[dict]:
-        """Execute a search_manual call: the matching sections as text, each headed by its title and URL."""
+        """Execute a search_manual call. Each section comes back as a search_result block with citations enabled,
+        one text block per paragraph, so Claude can cite individual paragraphs."""
         found = self.search(args["query"]) if isinstance(args.get("query"), str) else []
         if not found:
             return [{"type": "text", "text": "No matching sections found."}]
-        return [{"type": "text", "text": f"## {s['title']}\n{s['source_url']}\n\n" + "\n\n".join(s["paragraphs"])}
-                for s in found]
+        return [{"type": "search_result", "source": s["source_url"], "title": s["title"], "citations": {"enabled": True},
+                 "content": [{"type": "text", "text": p} for p in s["paragraphs"]]} for s in found]

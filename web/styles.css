@@ -37,6 +37,9 @@ main { flex: 1; overflow-y: auto; padding: 16px; }
 .status { margin: 0; color: var(--muted); font-size: 14px; }
 .error { color: var(--error); }
 .answer { white-space: pre-wrap; }
+.assistant h4 { margin: 12px 0 4px; padding-top: 8px; border-top: 1px solid var(--border); font-size: 12px;
+  text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.assistant ol { margin: 0; padding-left: 1.6em; font-size: 13.5px; }
 
 #composer { display: flex; gap: 8px; align-items: flex-end; padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
   background: var(--surface); border-top: 1px solid var(--border); }
