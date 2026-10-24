@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 class Config:
     model: str = "claude-sonnet-5-5"   # ANTHROPIC_API_KEY is read by the anthropic SDK itself
     max_tokens: int = 2048             # per answer
+    content_dir: Path = ROOT / "content"
 
     @classmethod
     def from_env(cls) -> Config:

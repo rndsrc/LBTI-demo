@@ -1,12 +1,14 @@
-"""Shared fixtures. No network: a scripted fake of the streaming Claude client."""
+"""Shared fixtures. No network: saved manual pages and a scripted fake of the streaming Claude client."""
 
 from __future__ import annotations
 
 import copy
+from pathlib import Path
 from types import SimpleNamespace
 
 from anthropic.types import TextBlock, Usage
 
+FIXTURES = Path(__file__).parent / "fixtures"
 
 def text(t: str, cites: list[dict] | None = None) -> TextBlock:
     return TextBlock.model_construct(type="text", text=t, citations=cites)
