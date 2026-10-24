@@ -36,7 +36,7 @@
     $("input").value = "";
     $("messages").append(el("li", "user", question));
     const box = el("li", "assistant");
-    const status = el("p", "status", "Thinking…");
+    const status = el("p", "status", "Searching the manual…");
     const msg = { box, body: el("div", "answer"), raw: "" };
     box.append(status, msg.body);
     $("messages").append(box);
@@ -51,7 +51,9 @@
       });
       if (!response.ok) throw new Error((await response.json().catch(() => ({}))).detail || `Error ${response.status}`);
       for await (const [event, data] of events(response)) {
-        if (event === "text") { status.hidden = true; msg.raw += data.text; }
+        if (event === "status") { status.hidden = false; status.textContent = data.text; }
+        else if (event === "retract") msg.raw = "";
+        else if (event === "text") { status.hidden = true; msg.raw += data.text; }
         else if (event === "error") throw new Error(data.message);
         render(msg);
       }

@@ -1,4 +1,4 @@
-"""The web app: the chat page and a streaming chat endpoint.
+"""The web app: the chat page, a streaming chat endpoint, and a health check.
 
     uvicorn --factory app.main:create_app"""
 
@@ -15,6 +15,7 @@ from pydantic import BaseModel, Field
 
 from app.config import ROOT, Config
 from app.llm import Chat
+from app.search import Manual
 
 log = logging.getLogger("lbti")
 
@@ -31,21 +32,28 @@ def sse(event: str, data: dict) -> str:
 def create_app(cfg: Config | None = None, client: anthropic.AsyncAnthropic | None = None) -> FastAPI:
     cfg = cfg or Config.from_env()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    chat = Chat(cfg, client)
+    manual = Manual(cfg.index_dir)
+    chat = Chat(cfg, manual, client)
     app = FastAPI(title="LBTI Assistant", docs_url=None, redoc_url=None, openapi_url=None)
+
+    @app.get("/healthz")
+    def healthz():
+        return {"status": "ok", "sections": len(manual.sections), "ingested_at": manual.meta["ingested_at"]}
 
     @app.post("/api/chat")
     async def ask(body: Question):
         question = body.message.strip()
 
         async def stream():
+            out: dict = {}
             try:
-                async for event in chat.answer(question):
+                async for event in chat.answer(question, out):
                     yield sse(event.pop("type"), event)
             except anthropic.APIError as e:
                 log.error("Claude API error: %s", e)
                 yield sse("error", {"message": "The model service returned an error. Please try again."})
                 return
+            log.info(json.dumps({"event": "answer", "searches": out["searches"], "question": question[:200]}))
             yield sse("done", {})
 
         return StreamingResponse(stream(), media_type="text/event-stream", headers={"Cache-Control": "no-cache"})

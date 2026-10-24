@@ -7,7 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from anthropic.types import TextBlock, Usage
+from anthropic.types import TextBlock, ToolUseBlock, Usage
 
 from app.config import Config
 from scripts.ingest import build_index, load_sections
@@ -64,11 +64,15 @@ def cfg(tmp_path: Path) -> Config:
         (tmp_path / "content" / name).parent.mkdir(parents=True, exist_ok=True)
         (tmp_path / "content" / name).write_text(text)
     build_index(load_sections(tmp_path / "content"), tmp_path / "index", "v0.11")
-    return Config(content_dir=tmp_path / "content", index_dir=tmp_path / "index")
+    return Config(content_dir=tmp_path / "content", index_dir=tmp_path / "index", max_searches=2)
 
 
 def text(t: str, cites: list[dict] | None = None) -> TextBlock:
     return TextBlock.model_construct(type="text", text=t, citations=cites)
+
+
+def tool(tid: str, name: str, args: dict) -> ToolUseBlock:
+    return ToolUseBlock.model_construct(type="tool_use", id=tid, name=name, input=args)
 
 
 class FakeClient:

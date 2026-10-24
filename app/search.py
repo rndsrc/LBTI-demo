@@ -1,4 +1,4 @@
-"""Full-text search over the manual (index/kb.sqlite, built by scripts/ingest.py)."""
+"""Full-text search over the manual (index/kb.sqlite, built by scripts/ingest.py), offered to Claude as a tool."""
 
 from __future__ import annotations
 
@@ -12,6 +12,16 @@ STOPWORDS = set("""a an and are as at be by can could do does for from has have 
 or should that the their them there these this to us was we were what when where which who why will with would you
 your about tell explain describe give list show please lbti manual available provide information info typical
 typically many much need needed get find any all some kind type types here use used using""".split())
+
+SEARCH_TOOL = {
+    "name": "search_manual",
+    "description": "Search the LBTI User's Manual (LBTO web pages and the PDF manual). Returns the most relevant "
+                   "sections. Use specific terms (instrument, filter, mode, "
+                   "quantity); search again with other words if the results do not answer the question.",
+    "input_schema": {"type": "object", "required": ["query"], "properties": {
+        "query": {"type": "string", "description": "e.g. 'NOMIC N-band filters' or 'nulling overheads'"}}},
+}
+
 
 def fts_query(text: str) -> str | None:
     """Free text -> FTS5 query: quoted terms OR-ed together, so user input is never parsed as FTS syntax."""
@@ -36,3 +46,10 @@ class Manual:
                                "ORDER BY bm25(sections, 0, 0, 8.0, 0, 1.0) LIMIT ?", (q, limit)).fetchall()
         return [self.sections[sid] for (sid,) in rows]
 
+    def run_tool(self, args: dict) -> list[dict]:
+        """Execute a search_manual call: the matching sections as text, each headed by its title and URL."""
+        found = self.search(args["query"]) if isinstance(args.get("query"), str) else []
+        if not found:
+            return [{"type": "text", "text": "No matching sections found."}]
+        return [{"type": "text", "text": f"## {s['title']}\n{s['source_url']}\n\n" + "\n\n".join(s["paragraphs"])}
+                for s in found]
