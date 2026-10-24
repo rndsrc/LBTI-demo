@@ -1,14 +1,22 @@
 """Claude answers a question by searching the manual (a tool-use loop) and streams an answer that cites the
-manual paragraph by paragraph."""
+manual paragraph by paragraph.
+
+Each request is [tool, system prompt, conversation]. The tool and the system prompt are the same for every user,
+so they carry a cache breakpoint; a top-level cache_control also caches each growing conversation."""
 
 from __future__ import annotations
 
+import json
+import logging
 from typing import AsyncIterator
 
 import anthropic
 
 from app.config import Config
 from app.search import SEARCH_TOOL, Manual
+
+log = logging.getLogger("lbti")
+CACHE = {"type": "ephemeral", "ttl": "1h"}
 
 SYSTEM = """You are the LBTI Assistant of the Large Binocular Telescope Observatory (LBTO). You help astronomers \
 who prepare or execute observations with the Large Binocular Telescope Interferometer (LBTI) by answering \
@@ -48,8 +56,9 @@ class Chat:
     def __init__(self, cfg: Config, manual: Manual, client: anthropic.AsyncAnthropic | None = None):
         self.cfg, self.manual = cfg, manual
         self.client = client or anthropic.AsyncAnthropic()
-        self.system = SYSTEM.format(pdf_version=manual.meta["pdf_version"], ingested=manual.meta["ingested_at"][:10])
-        self.tools = [SEARCH_TOOL]
+        prompt = SYSTEM.format(pdf_version=manual.meta["pdf_version"], ingested=manual.meta["ingested_at"][:10])
+        self.system = [{"type": "text", "text": prompt, "cache_control": CACHE}]
+        self.tools = [{**SEARCH_TOOL, "cache_control": CACHE}]
 
     async def answer(self, question: str, out: dict) -> AsyncIterator[dict]:
         """Answer one question and yield events for the browser:
@@ -65,7 +74,7 @@ class Chat:
 
         for round_no in range(self.cfg.max_searches + 1):
             request = dict(model=self.cfg.model, max_tokens=self.cfg.max_tokens, system=self.system, tools=self.tools,
-                           messages=messages)
+                           messages=messages, cache_control={"type": "ephemeral"})
             if thinking := thinking_for(self.cfg.model):
                 request["thinking"] = thinking
             if round_no == self.cfg.max_searches:
@@ -105,6 +114,9 @@ class Chat:
                         yield {"type": "status", "text": f"Searching the manual for “{query}”…"}
                 final = await stream.get_final_message()
 
+            log.info(json.dumps({"event": "claude", "round": round_no, "stop": final.stop_reason, **{
+                k: getattr(final.usage, k) or 0 for k in ("input_tokens", "output_tokens",
+                                                          "cache_creation_input_tokens", "cache_read_input_tokens")}}))
             if final.stop_reason == "refusal":
                 answer.append("\n\nI can't help with that request.")
                 yield {"type": "text", "text": answer[-1]}

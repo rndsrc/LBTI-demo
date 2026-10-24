@@ -39,7 +39,11 @@ def test_search_round_then_cited_answer(cfg):
         assert "".join(d["text"] for k, d in answer if k == "text") == "Br-alpha is in FW2[1] at 4.05 µm.\n"
         assert ev[-2][1]["sources"] == [{"n": 1, "source": SRC, "title": TITLE, "cited_text": ["| Br-alpha | FW2 | 4.05 |"]}]
 
-        [result] = fake.calls[1]["messages"][-1]["content"]
+        first, second = fake.calls
+        assert first["system"][0]["cache_control"] == first["tools"][0]["cache_control"] == {"type": "ephemeral",
+                                                                                           "ttl": "1h"}
+        assert first["cache_control"] == {"type": "ephemeral"} and first["thinking"] == {"type": "between_tools"}
+        [result] = second["messages"][-1]["content"]
         assert result["tool_use_id"] == "t1" and result["content"][0]["type"] == "search_result"
 
 
