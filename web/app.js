@@ -1,13 +1,30 @@
-/* LBTI Assistant chat page: send a question, show the answer as it streams in. No build step. */
+/* LBTI Assistant chat page. No build step; marked (Markdown) and DOMPurify (sanitising) are vendored. */
 (() => {
   "use strict";
   const $ = (id) => document.getElementById(id);
   const el = (tag, cls, text) => Object.assign(document.createElement(tag), cls ? { className: cls } : {}, text ? { textContent: text } : {});
   let controller = null;
 
-  // Show the answer as plain text.
+  // Render the answer as sanitised Markdown, then turn [n] markers into citation chips.
   function render(msg) {
-    msg.body.textContent = msg.raw;
+    msg.body.innerHTML = DOMPurify.sanitize(marked.parse(msg.raw), { FORBID_TAGS: ["img", "style", "form"] });
+    msg.body.querySelectorAll("a").forEach((a) => { a.target = "_blank"; a.rel = "noopener noreferrer"; });
+    const walker = document.createTreeWalker(msg.body, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) if (/\[\d+\]/.test(walker.currentNode.nodeValue) && !walker.currentNode.parentElement.closest("a, code")) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      const parts = node.nodeValue.split(/(\[\d+\])/);
+      node.replaceWith(...parts.map((p) => {
+        const src = msg.sources[Number(p.slice(1, -1)) - 1];
+        if (!/^\[\d+\]$/.test(p) || !src) return p;
+        const chip = el("a", "cite", p.slice(1, -1));
+        chip.href = src.source;
+        chip.target = "_blank";
+        chip.rel = "noopener noreferrer";
+        chip.append(el("span", "tip", `${src.title}\n\n${src.cited_text.join("\n…\n").slice(0, 600)}`));
+        return chip;
+      }));
+    }
   }
 
   function showSources(msg) {

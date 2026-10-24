@@ -7,6 +7,8 @@
   <title>LBTI Assistant</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
+  <script src="/vendor/marked.min.js" defer></script>
+  <script src="/vendor/purify.min.js" defer></script>
   <script src="/app.js" defer></script>
 </head>
 <body>
@@ -16,8 +18,9 @@
   </header>
   <main id="chat">
     <section id="welcome">
-      <h1>LBTI Assistant</h1>
-      <p>Ask a question about the Large Binocular Telescope Interferometer.</p>
+      <h1>Ask the LBTI manual</h1>
+      <p>Filters, detectors, adaptive optics, observing modes, overheads, calibrations, scripts and data reduction
+        for the Large Binocular Telescope Interferometer. Every answer cites the manual section it comes from.</p>
     </section>
     <ol id="messages"></ol>
   </main>
