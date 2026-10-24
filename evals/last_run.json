@@ -1,0 +1,455 @@
+{
+ "summary": {
+  "model": "claude-sonnet-5-5",
+  "questions": 30,
+  "recall_at_6": 1.0,
+  "cites_expected": 1.0,
+  "judge_mean": 4.3,
+  "abstentions": "3/3"
+ },
+ "results": [
+  {
+   "id": "lmircam-filters",
+   "question": "What filters are available in LMIRCam?",
+   "answer": "LMIRCam has filters spanning 1–5 µm. The lists below are from the web pages unless noted as PDF (v0.11).\n\n## Broadband filters, order sorters and blocking filters\n| Filter | Wheel (pos.) | λc [µm] | Range [µm] | Comments |\n|---|---|---|---|---|\n| Mauna Kea J | FW2.5, 7 | 1.25 | 1.16–1.34 | Set BeamDVT to window, use PK50 in FW4 |\n| H | FW2.5, 2 | 1.65 | 1.50–1.81 | Same as J |\n| Ks | FW2.5, 3 | 2.16 | 2.00–2.32 | Same as J |\n| LShort | FW25, 6 | 3.31 | 3.10–3.51 | |\n| StdL | FW4 | 3.70 | 3.41–3.99 | Optimized for planets |\n| L-Spec | FW2.5, 4 | 3.51 | 2.81–4.00 | Order sorting for L-band spectroscopy |\n| Janos | FW2.5, 5 | n/a | 3.0–5.0 | |\n| StdM | FW4 | 4.78 | 4.60–4.97 | Optimized for planets |\n| 2950BP1500 | FW4, 10 | n/a | 2.20–3.75 | ALES spectroscopic bandpass, optimized for pIce absorption at 3.1 µm |\n| IWBP2250 | FW2.5, 8 | n/a | 2.25–3.81 | ALES spectroscopic bandpass, optimized for pIce absorption at 3.1 µm |\n\nThe J, H and Ks entries carry the note \"BeamDVT set to window, use PK50 in FW4, so as to prevent L-band light leakage\".[1]\n\nThe PDF (v0.11) also lists a PK50 blocker (FW4, for JHK bands) and two neutral density filters in FW2. ND1.0-T10 is a 10% neutral density filter and ND2.0-T1 is a 1% neutral density filter.[2]\n\n## Narrowband filters\n| Filter | Wheel | λc [µm] | Range [µm] |\n|---|---|---|---|\n| Fe-II | FW2 | 1.645 | 1.63–1.66 |\n| NB2925-055 | FW2 | 2.925 | 2.87–2.98 |\n| H2O-Ice2 | FW4 | 3.08 | 3.01–3.15 |\n| L-cont. 1 | FW3 | 3.16 | 3.13–3.20 |\n| PAH 1 | FW2 | 3.2525 | 3.2394–3.3357 |\n| NB3375-025 | FW2 | 3.375 | not listed on web page |\n| L-cont. 2 | FW3 | 3.47 | 3.39–3.54 |\n| NB3555-041 | FW2 | 3.555 | not listed on web page |\n| L-cont. 3 | FW4 | 3.59 | 3.55–3.64 |\n| L-cont. 4 | FW4 | 3.78 | 3.68–3.88 |\n| N03946-4 | FW3 | 3.95 | 3.83–4.06 |\n| NB3950-035 | FW2 | 3.950 | not listed on web page |\n| Br-Alpha-On | FW4 | 4.06 | 4.02–4.09 |\n| Br-Alpha-Off | FW4 | 4.00 | 3.97–4.04 |\n\nThe PDF gives ranges for the three entries left blank above: NB3375-025 is 3.350–3.400 µm, NB3555-041 is 3.514–3.596 µm, and NB3950-035 is 3.915–3.985 µm.[2]\n\n## Filter wheel behavior\nEach filter wheel contains an open position. When you request an observation with a specific filter, broad or narrow band, the other filter wheels do not move to their open position by default. Each one must be moved manually using the Motors page, or be scripted into position.[3]\n\nThe manual's Setup table also gives the recommended wheel configurations for near-IR (≤K) and thermal-IR (>K) imaging, and for ALES alignment and science.\n\nThe PDF's \"Peak Counts\" and \"Background\" columns are all listed as TBD.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/lmircam-filters/#TOC-Broadband-filters-and-Spectroscopic-Order-Sorters",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=29",
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/lmircam-filters/#TOC-Narrowband-filters"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe answer is accurate. Every filter name, wheel position, central wavelength and range matches the cited web table and PDF rows, including the narrowband values and the PK50 and ND blocker details. It also correctly reports the filter-wheel open-position behavior and the TBD exposure columns.\n\nMinor issues keep it from a 5:\n- **Attribution is muddled for the narrowband table.** The answer says its lists come from the web pages unless noted as PDF, but the narrowband rows come from the PDF passage. It"
+  },
+  {
+   "id": "nomic-nprime",
+   "question": "What are the central wavelength and bandpass of the NOMIC Nprime filter?",
+   "answer": "**NOMIC Nprime filter:** central wavelength λc = 11.11 µm, range 10.22 – 12.49 µm, in filter wheel FW1. It is the standard HOSTS filter.[1]\n\nThe PDF manual (v0.11, Table 3.10) lists the same values: 11.11 µm and 10.22 - 12.49 µm[2].\n\nThe manual gives the range as a lower and upper wavelength limit, not as a bandwidth figure, so I haven't stated a width.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/nomic-filters/#TOC-Overview",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=40"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe core answer is correct and fully supported. It gives λc = 11.11 µm, the range 10.22–12.49 µm, filter wheel FW1, and the \"standard HOSTS filter\" note, all matching the cited overview table and the PDF passage.\n\nTwo issues keep it from a 5:\n\n- **Unsupported citation detail.** The answer says the PDF lists these values in \"Table 3.10.\" The cited PDF passage is under section 3.5.4 (Distortion correction and astrometry), and nothing in the excerpt shows a Table 3.10. Attributing the values to a specific table the assistant did not see is a small invented detail.\n- **Bandpass left unquantified.** The question asks for the bandpass. The answer correctly reports the range but declines to state a width, even though the width follows directly from the given limits (12.49 − 10.22 ≈ 2.27 µm). The reasoning is defensible, but a short note giving the width would have answered the question more fully."
+  },
+  {
+   "id": "ice-filter",
+   "question": "Which LMIRCam narrowband filter is meant for water ice and what wavelength range does it cover?",
+   "answer": "The water-ice narrowband filter is **H2O-Ice2**. It sits in filter wheel FW4, has a central wavelength of 3.08 µm, covers 3.01 – 3.15 µm, and is supplied by JDSU. The manual's comment is \"Crystalline ice peak (sub-micron grains)\".[1]\n\nEach filter wheel has an open position. The other filter wheels do not move to open by default when you request a filter, so you must move them manually on the Motors page or script them into position.[1]",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/lmircam-filters/#TOC-Narrowband-filters"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 5,
+   "judge": "SCORE: 5\n\nThe answer matches the cited table on every value. H2O-Ice2 is in FW4, with λc = 3.08 µm, range 3.01–3.15 µm, vendor JDSU, and the comment \"Crystalline ice peak (sub-micron grains).\" It also answers the question's core ask, which is the filter name and wavelength range. The second paragraph about open positions and manual FW movement is supported by the cited passage, so the extra detail is acceptable. The citation points to the correct section, and the answer does not rely on anything outside the manual."
+  },
+  {
+   "id": "nir-leakage",
+   "question": "How do I prevent L-band light leakage when imaging in J, H or Ks with LMIRCam?",
+   "answer": "Set the NIC Beam Diverter (BeamDVT) to the window, and put the PK50 blocking filter in FW4. The web-page filter table gives this for the Mauna Kea J, H and Ks filters (all in FW2.5): \"BeamDVT set to window, use PK50 in FW4, so as to prevent L-band light leakage.\"[1]\n\nRelated points from the manual:\n\n-   **Beam diverter:** the window is usually only used for H or K band imaging with LMIRCam, as it sends the H to M band to this camera and only the L band to NOMIC.[2]\n-   **PhaseCam:** in the window configuration PhaseCam receives no significant light and cannot be used.[2]\n-   **Optical quality:** the trichroic is preferred whenever possible because of its better optical quality; the window shows a number of optical ghosts.[2]\n-   **PDF filter table:** the v0.11 PDF lists a PK50-Blocker in FW4 for the JHK bands[3]. It also lists the Ks filter as \"Kshort\", which the web page calls \"Ks\". The PDF does not repeat the beam-diverter instruction in that table. The web-page version is canonical.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/lmircam-filters/#TOC-Broadband-filters-and-Spectroscopic-Order-Sorters",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=22",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=29"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 5,
+   "judge": "SCORE: 5\n\nThe core answer matches the reference exactly: set the NIC Beam Diverter (BeamDVT) to the window and place the PK50 blocker in FW4. The web-page filter table, which the cited passage quotes, supports this for the Mauna Kea J, H and Ks filters, all in FW2.5. The answer also gives the right filter-wheel positions for those filters.\n\nThe supplementary points are all supported by the cited passages. The beam-diverter section says the window is usually used for H or K band with LMIRCam, that PhaseCam receives no significant light in that configuration, and that the trichroic is preferred for optical quality. The PDF table lists the PK50-Blocker in FW4 for JHK, and it calls the Ks filter \"Kshort\". The answer correctly notes that the web page is canonical and that the PDF does not repeat the beam-diverter instruction.\n\nThe answer does not restate the trichroic as an alternative for L-band work, but that is not required to answer the question."
+  },
+  {
+   "id": "grisms",
+   "question": "What grisms are available for LMIRCam and in which bands do they work?",
+   "answer": "LMIRCam has two grisms, both in filter wheel 3 (web page values):\n\n| Grism | Position | Ruling | Blaze angle | Peak efficiency | Band/order |\n| --- | --- | --- | --- | --- | --- |\n| L-Grism #6 (AR coated) | FW 3, pos. 8 | 40 g/mm | 2.8° | 3.6 μm | L-band in first order[1] |\n| M-Grism #1 (AR coated) | FW 3, pos. 9 | 32 g/mm | 2.8° | 4.4 μm | M-band in first order[1] |\n| M-Grism #1 (AR coated) | FW 3, pos. 9 | 32 g/mm | 2.8° | 2.3 μm | K-band in second order[1] |\n\nThe same M-grism therefore covers both M-band (first order) and K-band (second order).\n\n**Resolution:** Both grisms are listed at λ/Δλ ~100 (~300)[2]. The native resolution is ~300, but for slit-less spectroscopy it is limited to ~100 by the diffraction-limited PSF.\n\n**Suggested blocking filters (PDF v0.11, Table 3.7):** L-grism: Lspec2.8-4.0 or Janos3.0-5.0; M-grism: Std-M or Kshort.[2]\n\nThe wavelength ranges are only given in the PDF as a transmission-efficiency plot (Fig. 3.12), not as numbers. The grisms are used for slit-less spectroscopy[2], and the observing-modes table lists Fizeau Spectrointerferometry (shared-risk, experimental or expert users only) with L & M band grisms[3].",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/lmircam-prism-grisms-other/#TOC-Grisms",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=29",
+    "https://scienceops.lbto.org/lbti/lbti-home/#available-modes"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\n**Reason:** The core answer is correct and complete. Both grisms, their filter wheel positions (FW 3, positions 8 and 9), rulings (40 and 32 g/mm), blaze angles (2.8°), peak efficiencies (3.6 µm and 4.4/2.3 µm), and band/order assignments (L first order; M first order; K second order) all match the reference and the cited table. The answer also correctly notes that the M-grism covers both M and K bands, and the resolution figures (~100, native ~300, limited to ~100 for slit-less spectroscopy) are supported by the passages.\n\nThe deduction is for two minor issues:\n- The answer calls the filter list \"Suggested blocking filters.\" The manual's column is labeled \"filter(s)\" and does not describe these as blocking or suggested filters. This is a framing the passage doesn't support.\n- The Fizeau Spectrointerferometry note is relevant context, but it goes beyond the question. It is supported by the cited modes table, so it is not an error."
+  },
+  {
+   "id": "nales-prism-resolution",
+   "question": "What spectral resolution does the NALES 2.8–4.2 µm prism give?",
+   "answer": "The NALES 2.8–4.2 µm prism gives a spectral resolution of ~40 (R = λ/Δλ, dimensionless). It covers L-band and is the only NALES prism that is fully commissioned.\n\n-   **Web pages:** the IFU prisms (ZnSe+AlO2), 2.8–4.2 µm, sit in FW 3, position 3, with a spectral resolution of ~40 in L-band.[1]\n-   **PDF v0.11:** the L band mode (2.8-4.2 micron, R ∼ 40) is the only mode that has been fully commissioned.[2] The other prisms are still being commissioned or are experimental, and NALES needs instrument PI approval (lbtipi@lbto.org[3]).\n\nThe web-page and PDF values agree.\n\nThe NALES pages also list a separate \"R~70\" figure for the 12x magnifier (33.76 mas/spaxel, 2\"x2\"[3]). The manual does not say how that figure relates to the 2.8–4.2 µm prism's ~40, so please check with LBTO science operations if it matters for your program.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/lmircam-prism-grisms-other/#TOC-NALES-Prisms",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=24",
+    "https://scienceops.lbto.org/lbti/planning-observations/modes-and-strategies/nales/"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\n**Reason:** The core answer is correct. The 2.8–4.2 µm prism has a spectral resolution of ~40 (R ~40 in L band), and the answer attributes it to both the web-page table and the PDF, which the passages support. The FW 3, position 3 detail is also right.\n\nDeductions:\n- **Conflation of ALES and NALES.** The PDF statement that the L-band mode is \"the only mode that has been fully commissioned\" is about ALES in the LMIRCam section. The answer presents it as a NALES fact (\"the only NALES prism that is fully commissioned\"), which the passage does not explicitly say.\n- **Citation numbering.** The reference [3] is used for two different sources (the lbtipi@lbto.org approval email and the 33.76 mas/spaxel magnifier passage), which makes the citations harder to check.\n- **Minor unsupported gloss.** The \"R = λ/Δλ, dimensionless\" definition is standard and not wrong, but it is not in the manual.\n\nThe extra R~70 note is supported by the cited NALES magnifier table and is handled appropriately."
+  },
+  {
+   "id": "nrm-masks",
+   "question": "Which non-redundant masks does LMIRCam have and where are they mounted?",
+   "answer": "LMIRCam has two non-redundant masks, both in the same filter wheel.\n\n| Mask | Description | Wheel |\n|---|---|---|\n| **NRM12** | Dual-aperture NRM mask, 12 holes (6 for SX, 6 for DX aperture)[1] | FW1 |\n| **NRM24** | Dual-aperture NRM mask, 24 holes (12 for SX, 12 for DX aperture)[1] | FW1 |\n\n- **Annular mask:** The same table lists an AnnularMask in FW1, a minimally redundant aperture mask[1]. The web pages mention partial annular rings[2] alongside the 12- and 24-hole masks.\n- **Wheel positions:** The web-page table of apertures and masks (a different table from the one above) gives Non-Redundant Mask, 24-hole at position 6 and Non-Redundant Mask, 12-hole at position 7[3]. That table does not name the wheel in the portion retrieved, so I can't confirm from the manual that these positions refer to FW1.\n- **Where they sit physically:** The web pages state that both LMIRCam and NOMIC have masks in their cold stop wheels[2].\n- **Usage:** NRM observations can be executed single- and double-sided with the two apertures imaged individually with baselines up to ∼ 8 m (routine) and with the two apertures combined for baselines up to ∼ 23 m (experimental).[4]",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=29",
+    "https://scienceops.lbto.org/lbti/planning-observations/modes-and-strategies/",
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/lmircam-prism-grisms-other/#TOC-Apertures-and-Masks",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=24"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe answer gets the core facts right. It identifies the two masks, the 24-hole (position 6) and 12-hole (position 7), and cites the web-page table for those positions. It also correctly reports the PDF's FW1 placement for NRM12 and NRM24 and the cold-stop-wheel statement. The extra usage detail (baselines up to ~8 m routine, ~23 m experimental) is supported by the cited PDF passage.\n\nIt falls short of a 5 for three reasons:\n\n- **Wheel identity is left unresolved.** The reference names the positions as aperture wheel positions. The answer says it \"can't confirm\" that positions 6 and 7 refer to FW1, so it never states that they are aperture-wheel positions, which is the direct answer to \"where are they mounted.\"\n- **Two sources are presented without reconciling them.** The answer says both masks are in FW1 and also gives positions 6 and 7 from a different table. The hedge is honest, but a reader is left to combine the two.\n- **The annular-mask bullet is off-topic.** It is cited and accurate, but it is not a non-redundant mask in the question's sense and adds length without answering anything asked."
+  },
+  {
+   "id": "lmircam-saturation",
+   "question": "What are the saturation level and 5% non-linearity level of the LMIRCam detector in fast mode?",
+   "answer": "For LMIRCam in fast mode (web page and PDF agree):\n\n| Quantity | Fast mode |\n| --- | --- |\n| Saturation level | 3,900 ADU[1] |\n| 5% non-linearity | 2,900 ADU[1] |\n\nThe web-page table gives the same values, 3900 for saturation and 2900 for 5% non-linearity[2]. For comparison, medium and slow modes are 62,000 ADU (saturation) and 47,500 ADU (5% non-linearity)[1].\n\nThe manual also says that persistence of the detector is largely negligible and saturating the detector is often and routinely done without any negative effects[3]. If you need linearity correction, users should explicitly request linearity data when planning observations[1].\n\nThe web page has a separate \"Saturation\" entry that reads \"Saturation is around 64K counts. ??% non linear at ~40K.\"[4] It is unlabeled and appears to be a placeholder, so I'd rely on the table values above. If this matters for your program, check with LBTO science operations.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=24",
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/detectors/#TOC-Characteristics",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=26",
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/detectors/#TOC-Saturation"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 5,
+   "judge": "SCORE: 5\n\nThe core answer is correct: fast mode has a saturation level of 3,900 ADU and a 5% non-linearity level of 2,900 ADU. Both figures match the reference and the cited Table 3.3 and web-page table. The medium and slow mode values (62,000 and 47,500 ADU) are also correct. The response attributes values to both the PDF and the web page, and the cited passages support the persistence and linearity-data statements. It also handles the unlabeled \"??% non linear at ~40K\" web-page entry sensibly by flagging it as a placeholder rather than using it. The only minor departure from \"answer only from the manual\" is the closing suggestion to contact LBTO science operations, which the manual does not state. That does not affect the accuracy of the answer."
+  },
+  {
+   "id": "stripe-frame-time",
+   "question": "What is the frame time of the LMIRCam Center_Stripe_256 readout?",
+   "answer": "**3.4 ms** for Center_Stripe_256 in LMIRCam Fast mode. The stripe covers rows 1025 to 1280.[1]\n\nThe web page lists the frame time in ms: Full Image 27.5, Center_Stripe_1024 13.7, Center_Stripe_512 6.9, Center_Stripe_256 3.4[1].\n\nThe PDF (v0.11) gives the same numbers in Table 3.4. Its column header says \"Frame time [s]\", which looks like a unit typo, since the web page gives ms. Sub-windowing is available for LMIRCam in Fast mode only.[2]",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/detectors/#TOC-Readout-Stripes",
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/detectors/#TOC-Characteristics"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe core answer is correct. The frame time for Center_Stripe_256 is 3.4 ms, and the stripe covers rows 1025 to 1280, both matching the cited readout table. The Fast mode claim is a reasonable inference from the sub-windowing passage.\n\nThe response loses a point for three reasons:\n\n- **Overreach on the PDF:** It says the PDF \"gives the same numbers\" for all readout stripes. The reference only confirms the 3.4 value for Center_Stripe_256, so the claim about the other rows is unsupported by the cited material.\n- **Unit-typo speculation:** It calls the PDF's \"[s]\" header a likely typo rather than simply noting the discrepancy and deferring to the web page, which is the canonical source. The reasoning is sensible, but the framing is more confident than the evidence supports.\n- **Citation markers:** It uses [1] and [2], but the passages are not numbered in a way that makes these references verifiable."
+  },
+  {
+   "id": "nomic-detector",
+   "question": "What kind of detector does NOMIC use and what is its pixel scale?",
+   "answer": "**Detector:** NOMIC uses a Raytheon 1,024 × 1,024 pixel Si:As Impurity Band Conduction (IBC) Aquarius detector.[1]\n\n**Pixel scale:** 17.9 mas/pixel[2] in the detector table on the web page. The PDF v0.11 gives the same value (17.9 mas/pix[1]).\n\n**Discrepancy:** the web page \"NIC\" overview lists NOMIC at 18 mas/pixel[3]. The detector characteristics page and the PDF both give 17.9 mas/pixel. The PDF text also contains a typo (\"max/pix\") in the sentence describing the plate scale.\n\n**Field of view:** the detector size and pixel scale give a theoretical FoV of 18 arcsec squared, but vignetting in the outer corners results in a circular effective FoV of ∼15 arcsec diameter for imaging and Fizeau interferometry.[1]",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=38",
+    "https://scienceops.lbto.org/lbti/instrument-characteristics/detectors/#TOC-Characteristics",
+    "https://scienceops.lbto.org/lbti/nic/"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe core answer is correct and supported by the cited passages. The detector is a Raytheon 1,024 × 1,024 Si:As IBC Aquarius array, and the pixel scale is 17.9 mas/pixel, matching the reference. The answer also correctly notes the 18 mas rounding in the NIC overview and the \"max/pix\" typo in the PDF.\n\nIt loses a point for the field-of-view paragraph. The question did not ask about FoV, and the answer states the PDF's ~15″ effective diameter as settled without mentioning that the web NIC table gives a different picture: only the central 500×500 pixels are used for imaging, with a field of approximately 9 arcseconds tall. Since the web pages are canonical, this conflict should have been flagged rather than left out. The omission is minor because the extra detail is not needed to answer the question."
+  },
+  {
+   "id": "soul-vs-flao",
+   "question": "How did the SOUL upgrade improve the LBTI adaptive optics compared to FLAO?",
+   "answer": "**SOUL** (Single Conjugated Adaptive Optics Upgrade for LBT) is an upgrade to the LBTI First Light Adaptive Optics (FLAO) system that took place 2018-2019[1]. The comparison table below is from the web page:\n\n| Feature | FLAO | SOUL |\n| --- | --- | --- |\n| Subapertures | 30×30 | 40×40 |\n| Read-out noise | 10e-/4e- | <1e |\n| Number of modes | 400/500 | 500/650 |\n| ASM rise time | <1ms | <0.7ms (0.5ms) |\n| Frame rate | 1kHz | 1.7kHz |\n\n(Source: AO & WFS › SOUL WFS web page)[1]\n\n**Stated goals and benefits:**\n- The upgrade aims to improve overall sky coverage, wavelength range, and PSF contrast, so that fainter targets can be observed, gaining ~2 magnitudes for almost all reference star brightness cases.[1]\n- These improvements should allow the phase to be stabilized in worse seeing.[1]\n\n**Upgrade timeline:** SX (left) was upgraded first; DX (right) was upgraded in spring of 2019.[1]\n\n**PDF v0.11 values:** Table 3.1 lists a maximum loop speed of 1.7 kHz, a maximum of 600 modes corrected, 40 × 40 sub-apertures, wavefront sensor camera read noise < 1 e-, and an ASM rise time of 0.5 ms[2]. The PDF's maximum of 600 modes differs from the web page's 650 for SOUL. As the web page is canonical, use 650 modes (web page) rather than 600 (PDF). The PDF also describes SOUL as \"currently under final commissioning and available for science observations\", which is an older snapshot of its status.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/ao-wfs/#TOC-SOUL-WFS",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=14"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 5,
+   "judge": "SCORE: 5\n\nThe answer reproduces every reference fact: 40×40 vs 30×30 subapertures, read noise <1 e- vs 10e-/4e-, 500/650 vs 400/500 modes, ASM rise time <0.7 ms vs <1 ms, and 1.7 kHz vs 1 kHz frame rate. Each figure matches the cited web-page table, and the parenthetical 0.5 ms value is kept as the source gives it. The stated goals (sky coverage, wavelength range, PSF contrast, about 2 magnitudes gained, better stabilization in worse seeing) and the upgrade timeline are supported by the cited passages. The PDF discrepancy (600 vs 650 modes) and the \"under final commissioning\" wording are handled as the grading setup directs, with the web page treated as canonical. The answer is somewhat verbose, with the PDF digression adding length, but the extra material is supported by the passages, so it does not count against the answer."
+  },
+  {
+   "id": "ao-reference-magnitude",
+   "question": "How bright does the AO reference source need to be for LBTI?",
+   "answer": "**The AO reference source needs to be R or I ≲ 18 mag to operate, and R or I ≲ 12 mag for peak performance.**\n\n-   **Operation:** The natural reference source magnitude for operation is R or I < 18[1]. The text says the limiting magnitude for the AO system is around R or I ∼ 18 for isolated point sources[2].\n-   **Peak performance:** R or I < 12[1].\n-   **Wavelength range:** The wavefront sensors work in the R to I band[1].\n-   **Resolved or extended sources:** AO performance is reduced for resolved AO reference sources, and limiting magnitudes decrease for faint sources surrounded by significant diffuse emission (such as cores of galaxies)[2].\n-   **Acceptable source types:** A star, a resolved but compact object such as a Solar system moon (Io has routinely been used), or the core of a galaxy[2].\n-   **Off-axis reference sources:** The AO loop can in principle be closed on a source as far as ∼ 60 arcsec away from the science target. Field rotation then moves the science target across the detector, which may put significant constraints on integration time and required source brightness.[3]\n\n**If the AO star is not the science target:** The science camera field of view needs at least one other bright source, visible in very few, short exposures, to use for centering and de-rotation. The required broad-band magnitudes are H ∼ 15 and N ∼ 4 (∼ 1 Jy). The L and M values are blank in the manual.[2]\n\n**Observing proposals:** The readme should list the R or I magnitude of the AO guide star if it differs from the target, and the separation of the AO guide star in arcsec (0.0 if the science target is the AO guide star).[4]",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=14",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=10",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=17",
+    "https://scienceops.lbto.org/lbti/planning-observations/readme/"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 5,
+   "judge": "SCORE: 5\n\nThe core answer is correct and matches the reference exactly: R or I < 18 for operation and R or I < 12 for peak performance, cited to the Table 3.1 passage. Every number in the extra material traces to the cited passages: R to I wavelength range, the ~60 arcsec off-axis limit, the H ~ 15 and N ~ 4 (~1 Jy) broadband requirements, and the readme fields for guide star magnitude and separation. The assistant also correctly notes that the L and M values are blank in the source rather than inventing them. The extra bullets add some length beyond the question, but they are supported and do not contradict the manual."
+  },
+  {
+   "id": "single-vs-double",
+   "question": "What is the difference between single-sided and double-sided non-overlapped AO imaging?",
+   "answer": "**Single-sided AO imaging**\n- Background-limited imaging, or for those who want to use the full detector array. A cold stop blocks the light from either the left or right telescope.[1]\n- The cameras' internal cold stops can block either telescope, along with that telescope's background.[2]\n- It suits programs with numerous pointings and short exposures, which can use one side only.[2]\n- It is available with both LMIRcam and NOMIC.\n\n**Double-sided non-overlapped AO imaging**\n- Speckle-limited imaging. Dual AO images are placed side by side, separated by ~half the width of the FoV.[1]\n- For contrast-limited programs, this can be the most efficient and effective way to reach science goals.[2]\n- The two sides create largely uncorrelated speckle patterns, which helps distinguish faint sources from the speckle halo of nearby sources (simultaneous confirmation observation).[3] Low signal-to-noise companion data can be confirmed or ruled out with the simultaneous images from each telescope.[2]\n- Different science detectors can be used on each side, e.g. NOMIC on the left and LMIRCam on the right, with independent nodding throws and timing.[2]\n- If both apertures are used simultaneously, they must use the same filter; simultaneous observations in two filters are not possible.[3]\n- Observations need a minimum of 2 instrument support staff for single-sided and 3 for double-sided.[4]\n\n**Version note:** The home page table (Double Sided non-Overlapped AO-imaging: LMIRcam ✓, NOMIC ✓[1]) disagrees with the AO-imaging page. That page lists \"Double Sided non-Overlapped 1.4-5μm AO-imaging\" with LMIRcam only[2]. Please confirm NOMIC double-sided availability with LBTO science operations. The PDF v0.11 NOMIC section also describes using both sides with the images placed next to each other on the detector[5].",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/lbti-home/#available-modes",
+    "https://scienceops.lbto.org/lbti/planning-observations/modes-and-strategies/ao-imaging/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=24",
+    "https://scienceops.lbto.org/lbti/observing/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=37"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "**SCORE: 4**\n\n**Reason:** The answer gets the core distinction right and matches the reference. Single-sided imaging is background limited, with a cold stop blocking one telescope. Double-sided non-overlapped imaging is speckle limited, with the two AO images side by side at about half the FoV width. Each bullet is backed by a cited passage, and the extra detail (program suitability, uncorrelated speckle patterns, mixed detectors, staffing) is supported by the quoted text.\n\nIt loses a point for the closing \"Version note.\" It is accurate that the home-page table shows NOMIC for double-sided and the AO-imaging page lists LMIRcam only. But the task says the web pages are canonical and the PDF is an older snapshot, so the answer should have resolved the conflict in the web pages' favor, or at least said which source governs, rather than leaving the question open. It also cites the PDF's NOMIC double-s"
+  },
+  {
+   "id": "nales-wavecal",
+   "question": "How are NALES/ALES wavelength calibrations done and how long do they take?",
+   "answer": "**How it's done**\n\n-   Wavelength calibrations use a set of four narrow-band photometric filters in series with the ALES optics, upstream of the lenslet array: 2.9, 3.3, 3.5, and 3.9 µm.[1]\n-   For NALES, the NALES page says the calibrations use narrowband filters with the ALES optics in place: magnifier, prism, and lenslet array.[2]\n-   Once the target is aligned on the \"sweetspot\" and the NALES optics are in place, they stay there until the observation is finished and all calibrations are taken, to ensure consistency.[2]\n-   Because ALES has many moving parts, the wavelength calibration data must be collected before moving any of the ALES optics, for example to switch to a non-ALES program.[1] Depending on the program, it may be necessary to take these during the night.[3]\n\n**How long**\n\n-   Depending on the program, this may require ~20 minutes of on-sky time.[1]\n-   The overheads page says these wavelength calibrations take approximately 20 minutes.[3]\n-   The PDF v0.11 (Table 4.3) lists \"ALES wavelength calibration, 20 min\"[4] as a common calibration that PIs need to request and that is charged to their program.\n\nThe manual gives no separate duration for NALES versus ALES. The web pages and the PDF agree on 20 minutes.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/planning-observations/calibrations/",
+    "https://scienceops.lbto.org/lbti/planning-observations/modes-and-strategies/nales/#TOC-Observing-approach",
+    "https://scienceops.lbto.org/lbti/planning-observations/overheads/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=53"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe answer gets the core facts right. It names the four narrow-band filters (2.9, 3.3, 3.5, 3.9 µm) in series with the ALES optics, says the calibrations must be taken before any ALES optics are moved, and gives approximately 20 minutes. Each bullet is backed by a cited passage, and the NALES optics configuration (magnifier, prism, lenslet array) and the \"leave optics in place\" guidance are supported by the Observing approach passages.\n\nIt loses a point for two unsupported details in the last bullet. The \"Table 4.3\" label does not appear in any passage provided; the cited source is section 4.5 (Observing scripts). The claim that the calibration is \"charged to their program\" is also not in the cited text. These are minor, but they are assertions the passages do not support."
+  },
+  {
+   "id": "nales-nodding",
+   "question": "What nodding strategy is used for NALES observations?",
+   "answer": "**NALES** typically uses a **3-point nod**, with a 2-point nod for self-guided targets.\n\n-   **3-point nod:** Often a 3 point nod strategy is observed. The 3 point nod strategy involves a pattern designed to nod between the primary, secondary, and sky. This is particularly necessary if the secondary source is outside the NALES limited FOV.[1]\n-   **2-point nod:** For self guided targets, such as calibrators or solar system objects, a two point nod sequence is sufficient. This nod script periodically nods from primary source to sky and back in order to track the sky background variations.[1]\n-   **Darks and scripting:** Dark frames are saved between nods, while the telescope resumes guiding. These darks are used to monitor, track, and flag variable pixels that can complicate the reduction process.[1] The nod sequences and calibrations are all scripted, collecting science when the AO loops are closed and calibration data during moves. The header information commonly used in reductions (SCI, DRK, SKY) is populated automatically by the scripts.\n\nThe NALES page does not give nod interval durations or nod throws. For LBTI nodding in general, the PDF (v0.11) says nodding intervals (half-cycles) are up to 15 min, 5 min, and 2 min in the L, M, and N bands, respectively[2]. That is general LBTI guidance rather than a NALES-specific value.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/planning-observations/modes-and-strategies/nales/#TOC-Observing-approach",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=47"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 5,
+   "judge": "SCORE: 5\n\nThe answer gives both key facts: a 3-point nod between primary, secondary, and sky for NALES, and a 2-point nod from source to sky and back for self-guided targets such as calibrators or solar system objects. Both match the reference and the cited NALES passages.\n\nThe extra material is supported by the cited passages. The dark-frame and scripting details come from the NALES page, and the L/M/N nod intervals (15, 5, and 2 min) come from the PDF. The answer labels the PDF figures as general LBTI guidance rather than NALES-specific, which avoids misattribution. Nothing is invented, and the answer stays within the manual."
+  },
+  {
+   "id": "nulling-setup",
+   "question": "How is a nulling observation set up and executed?",
+   "answer": "Here is what the manual covers on nulling. It gives a high-level setup and execution sequence, but not a step-by-step operator procedure.\n\n## Preparation (your side)\n- LBTI observing preparation and scripting is not currently supported in the LBTO Observing Tool.[1] Most LBTI runs are executed in queue observing, unless approved otherwise by special request. Expert observers generate the observing scripts, run the programs, operate the instrument, and assess data quality according to the Readme you provide.\n- Your Readme should include the observing strategy (instrument mode, required s/n, calibrations needed, etc.) and an execution time estimate[1]. It should also list targets including calibrators, with finder charts and weather constraints (11-4, 11-5).\n\n## Instrument setup\n- NOMIC has a nulling channel and an imaging/Fizeau channel. The channel is selected with the Imaging Dichroic (out for nulling) and the Nulling Mirror (in for nulling).[2]\n- In the nulling channel, the light from the two apertures is combined in the pupil plane in PhaseCam. The H and K band light is used for fringe tracking, and the N band light goes on to NOMIC.[2]\n- Each telescope beam goes through opposite sides of a single-pass 50% transmissive beam-splitter, and fine alignment is done with two three-axis PZT tip-tilt-piston platforms.[3]\n- The roof mirrors are adjusted in tip and tilt to overlap the pupils on NOMIC for nulling, and are not moved again during an observation once aligned.[4]\n- The interferometer is tuned to null by adjusting the phase sensor setpoint while measuring the flux at 11 µm. This process is scripted as part of the nulling setup procedure.[3]\n\n## Execution\n- A typical nulling observation consists of at least one CAL-SCI (calibrator and science target) pair. The telescope elevation should match as closely as possible between science and calibrator.[3]\n- Darks are taken automatically while setting up and adjusting the phase sensor setpoint. The observing script then takes several nulled nodded pairs, followed by photometric and background frames.[3]\n- Data are typically many (~1000) short (~50 ms) exposures per pointing.[3]\n\n## Overheads\n- Table 4.4 (PDF v0.11) lists nulling alignment, on a mode change to nulling, at 1200 s, including fringe search, and run parallel to AO acquisition.[5] Other relevant entries in the same table are the telescope preset (75 s per target change) and further AO acquisitions (300 s per target change).\n- The web overheads page lists \"Nulling Alignment/Setup\" at 600 s typical and 3600 s maximum[6]. The web page is canonical, so use the 600 s typical / 3600 s maximum figures; the PDF's 1200 s comes from the older snapshot.\n\n## Not covered\nThe manual does not give the detailed operator steps for the fringe search or null optimization, nor the exact nod pattern and timing. For those, contact LBTO science operations or the LBTI instrument scientist[1].",
+   "searches": 2,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/planning-observations/readme/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=40",
+    "https://scienceops.lbto.org/lbti/planning-observations/modes-and-strategies/nulling/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=21",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=55",
+    "https://scienceops.lbto.org/lbti/planning-observations/overheads/"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe answer is largely accurate and well grounded. It covers the core reference facts: tuning by adjusting the phase sensor setpoint while measuring flux at 11 µm, about 1000 short (~50 ms) exposures per pointing, and at least one CAL-SCI pair with matched elevation. The instrument setup details (the imaging dichroic and nulling mirror selection, the PhaseCam pupil combination, the PZT platforms, and the roof mirror alignment) match the cited passages. The overhead figures are correctly attributed to the web page (600 s typical, 3600 s maximum) and the PDF (1200 s), and the answer applies the stated canonical-source rule.\n\nMinor problems keep it from a 5:\n- The weather-constraint reference \"(11-4, 11-5)\" is not supported by any cited passage.\n- The label \"Table 4.4\" for the PDF overhead entry does not appear in the provided text.\n- The answer omits that the PDF overhead table lists nulling alignment as a mode-change overhead under the \"Alignment nulling\" row, which is fine, but it does not mention the 1800 s \"any other alignment\" row, which is not needed.\n\nThese are small citation and labeling issues. The substantive content is correct and complete for what the manual covers, and the answer correctly flags what is not covered."
+  },
+  {
+   "id": "nulling-overhead",
+   "question": "What overhead should I expect for nulling alignment and setup?",
+   "answer": "The web page and the PDF give different figures for nulling alignment and setup.\n\n| Source | Item | Time |\n| --- | --- | --- |\n| Web page (canonical) | Human Element: Nulling Alignment/Setup | Typical 600 s, Maximum 3600 s[1] |\n| PDF v0.11, Table 4.4 | Alignment nulling (on each mode change to nulling) | 1200 s, including fringe search, etc., in parallel to AO acquisition[2] |\n\n- **Planning value:** Use the web-page figures (600 s typical, 3600 s maximum). The PDF is an older snapshot, and its 1200 s is a single value rather than a typical/maximum pair.\n- **Additive:** Overheads for alignment add up[2], so combining modes means summing their alignment times.\n- **Other overheads:** Nulling observations also incur the usual overheads, such as telescope preset and AO acquisition. The web-page table gives 75 s typical (300 s maximum) for telescope preset and 180 s typical (240 s maximum) for AO setup[1]. The PDF lists 600 s for the initial AO acquisition and 300 s for further AO acquisitions[2].\n- **Not charged to you:** Twilight is used for initial AO setup and checkout and for the initial instrument alignment, so start-of-night setup overheads are typically not passed on to users.[1]\n- **Both pages note:** The above times are estimates and may be refined.[1]\n\nFor a precise time request, contact LBTO science operations.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/planning-observations/overheads/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=55"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\n**Reason:** The core figures are correct. The web page gives 600 s typical and 3600 s maximum for Nulling Alignment/Setup, and the PDF gives 1200 s for alignment nulling. The answer presents both, labels the web page as canonical, and notes that the PDF's 1200 s is a single value. The additive-overhead note, the telescope preset (75/300 s) and AO setup (180/240 s) values, the PDF's 600 s and 300 s AO acquisition values, and the twilight point all match the cited passages.\n\nMinor issues keep it from a 5:\n- \"Both pages note\" that times may be refined. Only the Planning Observations section, which is the web page content, says this. The PDF passages don't.\n- The heading \"Not charged to you\" overstates the source, which says start-of-night overheads are \"typically not passed on to users.\"\n- It omits the Human Element Troubleshooting overhead (60 s typical, 1800 s maximum), which is relevant to nulling setup.\n- The \"usual overheads"
+  },
+  {
+   "id": "time-per-target",
+   "question": "How much telescope time is typically allocated per target for targeted high-contrast imaging?",
+   "answer": "Targeted high-contrast observations are commonly allocated half-nights (5 h) per target including all overheads.[1]\n\nOther cases:\n- **Shallower high-contrast surveys:** as little as 2 h per target.[1]\n- **Snapshot observations:** as little as 30 min per target if multiple targets can be grouped together to share overheads for instrument setup.[1]\n\nThe reason is that time allocated to LBTI programs is wall clock time. Most observations are not limited by integration time, but by constraints such as field rotation required to achieve maximum contrast or for the most effective interferometric image reconstruction.[1] For example, the LEECH survey typically observed targets for five hours around meridian passage, resulting in high field rotation (critical for angular differential imaging).[2]\n\nThese figures come from the PDF User's Manual v0.11, Sect. 4.7. For a more detailed overhead breakdown, see Table 4.4 in that section.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=55",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=32"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe core answer is correct and complete. It gives half-nights (5 h) per target including overheads for targeted high-contrast observations, as little as 2 h for shallower surveys, and as little as 30 min for snapshots grouped to share setup overheads. Each figure matches the reference and the cited passage, and the citations are used appropriately.\n\nThe deduction is for the closing sentence, \"For a more detailed overhead breakdown, see Table 4.4 in that section.\" Neither cited passage mentions Table 4.4, so this pointer is unsupported by the retrieved text. It is a minor fabrication rather than an error in the answer's substance, which is why the score is 4 and not lower."
+  },
+  {
+   "id": "routine-calibrations",
+   "question": "Which calibrations does the LBTI team take routinely without charging my program?",
+   "answer": "**Routine calibrations not charged to a specific program** (PDF manual v0.11, Table 4.2):\n\n| Calibration | Interval | Notes |\n|---|---|---|\n| LMIRCam linearity | 1/semester[1] | Relevant detector modes |\n| NOMIC linearity | 1/semester | Relevant detector modes |\n| LMIRCam distortion | 1/observing run | Relevant detector subframes |\n| LMIRCam astrometry | 1/year | Map Trapezium astrometric field |\n| NOMIC distortion | 1/observing run | Experimental/best-effort |\n| LMIRCam & NOMIC darks | 1/observation | Relevant detector modes |\n\nCalibration data are available to users as part of their science data set or upon request.[2]\n\n**Other items that are not charged to your program:**\n- The on-sky checkout of the instrument and AO system, usually done in early evening twilight, is not charged to a specific program.[3]\n- Twilight is used for initial AO setup and checkout and for the initial instrument alignment, so start-of-night setup overheads are typically not passed on to users.[4]\n\n**Charged to your program, so include them in your time request:** Additional calibrations required by a specific program need to be requested by the PI, and the sky time must be accounted for in the telescope time request.[2] Examples from Table 4.3 are photometric calibrators (15 min each), unsaturated observations (5 min each), telluric calibrators for ALES (15 min each), PSF calibrators (15 min each), ALES wavelength calibration (20 min), NOMIC astrometry (1 h), and off-sky flat fields.[1]\n\n**NOMIC distortion and astrometry:** Data for NOMIC distortion correction can be obtained in closed-dome at no cost to the PI, but the time for obtaining NOMIC astrometry data must be charged to a program as required on-sky calibration.[5] Both are experimental.\n\n**Note:** The web-page calibrations section (the alldarks.py script is run at the end of each night, and the lmircam_linearty.py script about once per run[6]) is consistent with the PDF table, but it does not say which calibrations are charged. The charged/not-charged split above comes only from the PDF v0.11 tables.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=53",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=54",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=55",
+    "https://scienceops.lbto.org/lbti/planning-observations/overheads/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=40",
+    "https://scienceops.lbto.org/lbti/planning-observations/calibrations/"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe answer gives all six routine calibrations from the reference with the correct intervals and notes: LMIRCam and NOMIC linearity (1/semester), LMIRCam distortion (1/observing run), LMIRCam astrometry (1/year, Trapezium), NOMIC distortion (1/observing run, experimental/best-effort), and LMIRCam & NOMIC darks (1/observation). The added points are supported by the cited passages: twilight checkout is not charged, the Section 4.6 statement that additional calibrations must be requested and their sky time"
+  },
+  {
+   "id": "psf-calibrator",
+   "question": "What makes a good PSF calibrator for LBTI imaging?",
+   "answer": "A good LBTI imaging PSF calibrator is:\n\n-   **Nearby:** PSF calibrators should be nearby stars with similar magnitudes and color to the science field wavefront reference source.[1]\n-   **Single:** Fields with single PSFs appropriate for PSF calibrations can be found by searching star catalogs.[1]\n-   **Unsaturated:** PSF calibrators should not be saturated.[1]\n\n**Planning notes**\n-   PSF calibrators are listed among the common calibrations that PIs must request and that are charged to their program. The time required is 15 min each, for LMIRCam, NOMIC, and ALES.[2]\n-   In your README, provide a complete list of your targets including calibrators, with a unique identifier (if possible recognized by SIMBAD), RA & DEC, target magnitude in R or I band and in science filters, and the AO guide star separation and R or I magnitude. Please also include finder charts for each target including calibrators.[3]\n\nThe manual gives no quantitative criteria for the calibrator, such as a maximum separation or magnitude difference from the science target. For those, contact the LBTI instrument scientist (sertel@lbti.org) or LBTO science operations.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/planning-observations/calibrations/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=53",
+    "https://scienceops.lbto.org/lbti/planning-observations/readme/"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe core answer matches the reference. It lists the three criteria (nearby with similar magnitude and colour to the wavefront reference source, single PSF, unsaturated), and the cited passages support each one. The planning notes also match the cited sources: the 15 min per calibrator figure for LMIRCam, NOMIC and ALES comes from the calibration table, and the README requirements match the Readme passage.\n\nIt loses a point because the closing paragraph gives a specific contact (sertel@lbti.org) and says to contact LBTO science operations. Neither appears in the cited passages, so it is unsupported by the sources, which conflicts with the instruction to answer only from the manual. The claim that PSF calibrators are \"charged to their program\" is also a small inference beyond the cited wording."
+  },
+  {
+   "id": "finding-chart",
+   "question": "What does a finding chart for LBTI need to show?",
+   "answer": "**Finder chart requirements (web page):**\n\n\n- The science target should be clearly indicated. If it is not visible (too faint or a diffuse object), the reference source and offsets to the science target should be clearly marked.\n- The target name or script name should be clearly indicated.\n- North and East should be clearly indicated.\n- The scale should be shown by a drawn bar labeled with its length in arcseconds or arcminutes.\n- The observed band or filter should be indicated and should match that of the acquisition image taken at the LBT.\n- The image should reach about the same depth as expected in an acquisition image at the LBT.[1]\n\n\n**Additional guidance (PDF v0.11, §4.4):**\n- The chart should be obtained at a red visible wavelength (e.g., R band). An additional chart, e.g., from 2MASS, should be provided if the field looks significantly different in the infrared. A FoV of ∼ 1 arcmin is the most useful.[2]\n- The target, North and East, scale bar and observing band must be indicated on the image itself, not in an email, the README, or other auxiliary information.[2]\n- A finding chart is required only if the target is relatively faint and embedded in a group of sources within one arcminute. Otherwise, the PI must make sure target identification is obvious on both the AO acquisition camera (RI bands) and the science camera.[2] Time lost to identifying the target is charged to the project's allocated time, and an observation may be aborted if the target cannot be clearly identified.\n\n**README page:** It asks for finder charts for each target, including calibrators.[3]",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/planning-observations/finding-charts/#TOC-Finder-Chart-Requirements",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=52",
+    "https://scienceops.lbto.org/lbti/planning-observations/readme/"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 5,
+   "judge": "SCORE: 5\n\nThe answer covers all six key facts from the reference: the science target (or reference source and offsets if the target isn't visible), the target/script name, North and East, a scale bar labeled in arcsec or arcmin, the band/filter matching the LBT acquisition image, and similar depth to an LBT acquisition image. Each is supported by the cited web-page passage, and no numbers are altered or invented.\n\nThe extra guidance from the PDF (red visible wavelength, a 2MASS chart if the infrared view differs, a FoV of about 1 arcmin, and marking everything on the image itself) is drawn from the cited §4.4 passages and is accurate. The answer also correctly attributes the web page and PDF sources and includes the README requirement for finder charts of all targets, including calibrators. The additional detail is supported, so it doesn't count against the answer."
+  },
+  {
+   "id": "readme-targets",
+   "question": "What target information must I include in the observing README?",
+   "answer": "Per the web page (canonical), your README must give a complete list of targets, **including calibrators**. Required information is:[1]\n\n-   A unique identifier (if possible one recognized by SIMBAD)[1]\n-   RA & DEC[1]\n-   Target magnitude in R or I band **and** in the science filters[1]\n-   Separation of the AO guide star in arcsec (0.0 if the science target is the AO guide star)[1]\n-   The R or I magnitude of the AO guide star, if different from the target[1]\n-   Finder charts for each target, including calibrators[1]\n\n**Finder chart notes:**\n\n-   The web page asks for finder charts for every target. The PDF v0.11 is more lenient: a finding chart is required only if the target is relatively faint and embedded in a group of sources within one arcminute[2]. Otherwise the PI must ensure the target is obvious on both the AO acquisition camera and the science camera.\n-   A finder chart should clearly mark the science target (or, if it is not visible, the reference source and offsets to it), the target or script name, North and East, a scale bar, and the observed band, which should match the LBT acquisition image.[3]\n\n**Also required in the README (beyond target data):**\n\n-   Weather constraints for each target, giving the worst conditions your observations can tolerate[1]: seeing (0.8, 1.2, 2.0 arcsec, or no constraint), transparency (photometric, spectroscopic, thin clouds, thick clouds), and precipitable water vapor (3 mm, 6 mm, or no constraint).\n-   The observing strategy (instrument mode, required S/N, calibrations, field rotation needed e.g. for ADI, whether saturation is acceptable and to what separation) and an execution time estimate.[1]\n\nA README template is available for download[1] (PIName_Partner_README_Template) from the Readme page. For questions, contact the LBTI instrument scientist (sertel@lbti.org).",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/planning-observations/readme/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=52",
+    "https://scienceops.lbto.org/lbti/planning-observations/finding-charts/#TOC-Finder-Chart-Requirements"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\n**Reason:** The answer gets every required item right and matches the reference exactly: a unique identifier (SIMBAD-recognized if possible), RA and Dec, target magnitude in R or I and in the science filters, AO guide star separation (0.0 if the target is the guide star), the guide star's R or I magnitude if it differs from the target, and finder charts for each target including calibrators. The web-page and PDF distinction on finder charts is accurately drawn from the cited passages, and the finder-chart content requirements (marked science target, name, North/East, scale bar, matching band, comparable depth) are supported.\n\nThe deduction is for two details the cited passages do not support: the template filename \"PIName_Partner_README_Template\" and the contact address sertel@lbti.org. Neither appears in the cited text. The extra material on weather constraints and observing strategy is supported by the cited passages, so it does not count against the score."
+  },
+  {
+   "id": "scripts",
+   "question": "How are LBTI observations scripted?",
+   "answer": "LBTI observations are scripted with Python, using template scripts for each observing mode.\n\n-   **Mechanism:** Python scripts send INDI commands to the instruments, configuring the instrument and taking the desired exposures.[1] Most LBTI observations consist of a sequence of integrations and sky offsets after the target has been acquired with the AO and science camera and the instrument has been set up. The scripts control both the instrument and the telescope through INDI (Instrument Neutral Distributed Interface) commands.[2]\n-   **Templates:** There are template Python scripts for each observing mode/configuration, with nod patterns, integrated darks where necessary, and sky offsets where desired. The appropriate template is selected and run with a suitable dither size and optimized exposure time.[1]\n-   **Flexibility:** Python scripting allows complex sequences with pauses for manual interaction, and new functionality can be developed.[2]\n-   **Limits to scripting:** Many alignment procedures require manual interaction, which limits how much can be scripted.[1] Many motor movements can be scripted, but alignments and verifications are much more efficient manually at this time.[3] Tweaking filter wheels or other motors manually may result in incomplete header information, so users should refer to the logs.\n-   **Example (NALES):** Nod sequences and calibrations are scripted to optimize telescope time. Science data are collected while the AO loops are closed, and calibration data are taken during moves. The SCI, DRK and SKY header entries are populated automatically by the scripts.[4]\n-   **Calibration scripts:** alldarks.py (in templates/calibrations) is run at the end of each night, and lmircam_linearty.py is run about once per run. Dome flats are not typically scripted; they are taken by setting detector and motor parameters through the LBTI web pages.[5]\n-   **Complex or custom scripts:** Contact the LBTI Lead Scientist (Steve Ertel, sertel@lbti.org) as early as possible, ideally before submitting a proposal. The LBTI team will try to accommodate complex scripting for scheduled programs, but PIs or their team members may need to contribute significant effort.[2] New, complex scripts are considered experimental until fully tested, including an analysis of the science data produced.\n-   **Manual alternative:** Most commands that happen on human time scales can also be executed manually. This is best-effort and always experimental, with lower efficiency, precision and repeatability and a higher risk of human error.[2]",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/observing/software-scripts/#TOC-Scripting",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=53",
+    "https://scienceops.lbto.org/lbti/observing/software-scripts/#TOC-LBTI-Web",
+    "https://scienceops.lbto.org/lbti/planning-observations/modes-and-strategies/nales/#TOC-Observing-approach",
+    "https://scienceops.lbto.org/lbti/planning-observations/calibrations/"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 5,
+   "judge": "SCORE: 5\n\nThe answer is correct and complete, and every claim I checked is supported by the cited passages:\n\n- **Core mechanism:** Python scripts send INDI commands to configure the instrument and take exposures, after target acquisition and setup. This matches the Scripting section and the 4.5 Observing scripts section.\n- **Templates:** Per-mode templates with nod patterns, darks, and sky offsets, run with a dither size and optimized exposure time. This matches the Scripting section.\n- **Limits:** Alignment procedures often need manual interaction, and motor moves can be scripted but alignments are more efficient manually. The answer also notes that manual tweaks can leave header information incomplete, which the Web passage supports.\n- **Specifics:** alldarks.py in templates/calibrations (end of each night), lmircam_linearty.py (about once per run), and dome flats set through the web pages all match the Calibrations passage. The NALES SCI/DRK/SKY header behavior matches the NALES passage.\n- **Process:** Contacting Steve Ertel early, the experimental status of new scripts, and the best-effort manual alternative all match the 4.5 passage.\n\nThe answer does not invent anything. The NALES example and calibration details go beyond the reference's summary, but the cited passages support them, so they count as acceptable extra detail. Repetition between the \"Mechanism\" and \"Templates\" bullets is minor and does not affect correctness."
+  },
+  {
+   "id": "data-retrieval",
+   "question": "How do I retrieve my LMIRCam and NOMIC data?",
+   "answer": "**LMIRCam:** LMIRCam data is available through the LBTO archive. There may be some delay before the data appears in the archive, depending on volume.[1] The manual (web page) does not give step-by-step archive access instructions.\n\n**NOMIC:** NOMIC data acquisition will be coordinated through the LBTI team.[1] Contact your LBTI team contact for this.\n\n**Version note:** The older PDF (v0.11, §4.8) says LBTI was transitioning to archiving data in the LBTO archive, and users would receive an email with instructions on how to access their data until the process was complete.[2] The web page above is canonical. It states that LMIRCam data is now in the archive.\n\n**Reduction help:** The LBTI team generally cannot provide support on data reduction, but may offer advice on specific questions. Contact your LBTI team contact for details.[3]\n\nFor archive login or access details not covered here, contact LBTO science operations.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/data-retrieval-reduction-publication/#TOC-Data-Access",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=57",
+    "https://scienceops.lbto.org/lbti/data-retrieval-reduction-publication/#TOC-Reduction"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe answer gets the core facts right. LMIRCam data is in the LBTO archive, with possible delay depending on volume, and NOMIC acquisition is coordinated through the LBTI team. Both claims are cited to the canonical web page, and the older PDF is correctly identified as a superseded snapshot about the archive transition.\n\nThe main shortfall is the closing line, \"contact LBTO science operations.\" Neither cited passage mentions that contact, so it is unsupported. The answer also misses a practical point from the PDF: during the transition, users receive an email with access instructions, which a user would need to know to retrieve data now. It mentions that email only as background. These are minor omissions, so the answer falls short of a 5 but is otherwise correct and well sourced."
+  },
+  {
+   "id": "distortion",
+   "question": "How do I correct LMIRCam images for optical distortion?",
+   "answer": "**Short version:** apply the distortion solution derived from the pinhole-grid images that matches your observing epoch to your reduced science frames. LMIRCam images are subject to significant optical distortion and the manual highly recommends correcting it on any images.[1]\n\n**Procedure**\n\n1. **Get the solution for your epoch.** The pinhole positions are measured and a solution is derived that distorts the image so the positions form a cartesian grid; that same distortion is then applied to science images.[1] The web page lists pinhole images and distortion coefficient files by validity period (2016B–2017A, 2017B–2018A, 2018B–2020A, 2020B), with sx, dx, and double-sided versions for some epochs. Examples are coeff_lmir_sx_191119.dat for 2018B–2020A, and coeff_lmir_dx_20210521.rtf and coeff_lmir_dx_20210521_strip.rtf for 2020B.\n\n2. **Apply it with your own tools or the team's Python package.** The package is a basic Python dewarp package in which the appropriate matrices are simply copied into the code before running; it was run with Python 3.6.3 and recent versions of common libraries.[1] The tools and data are described in more detail at dewarp.readthedocs.io, and users of the tools are asked to give credit as indicated under \"attribution\".[2]\n\n3. **Mind the order of operations.** Apply the correction after all pixel-specific corrections (e.g., dark/bias/nod subtraction, bad pixel correction), but before any de-rotation or other morphing of the images.[1]\n\n4. **Verify.** Apply the correction to the corresponding pinhole image and inspect the result visually to test your procedure.[1]\n\n**Caveats**\n\n- **Subframes:** The solutions were derived for full 2048×2048 pixel images and are only valid where pinholes are clearly visible. The easiest approach for subframes is to insert the smaller image at the appropriate position in an empty 2048×2048 image, apply the correction, and crop again.[1] Recording per-pixel shifts and applying them to subframes directly has not yet been explored by the team.\n- **Finding your subframe:** Older data have the subframe information in FITS header keywords starting with 'SUBSEC'. If you cannot determine the subsection, ask your LBTI team contact.[1] According to the PDF (v0.11), the 'center stripe' used rows 512 to 1,535 of the full frame until Summer 2021, and newer subsections are listed in its Table 3.4.[3]\n- **Residual distortion:** The pinhole grid corrects only the optics downstream of it; the typically small residual distortion from optics upstream is not measured.[1]\n- **SX vs. DX:** There should not be a significant difference between the sx, dx, and double-sided matrices, but the manual says per-side matrices will be provided in the future.[1]\n\nFor astrometry (plate scale and true North), the manual points to separate Trapezium-based calibrations on the same page.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/lbti/data-retrieval-reduction-publication/distortion-correction-and-astrometric-solution/#TOC-Optical-Distortion-Correction",
+    "https://scienceops.lbto.org/lbti/data-retrieval-reduction-publication/distortion-correction-and-astrometric-solution/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=34"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe core procedure is correct and supported by the cited passages: pick the solution for your epoch, apply it with your own tools or the team's package, apply it after pixel-level corrections and before de-rotation, verify on the pinhole image, and note the subframe limitation. The epoch examples (coeff_lmir_sx_191119.dat; coeff_lmir_dx_20210521.rtf and _strip.rtf) match the table, and the 'center stripe' rows 512–1,535 are taken from the PDF passage, which the answer correctly attributes to the older snapshot.\n\nDeductions:\n- **Unsupported claim:** \"the"
+  },
+  {
+   "id": "user-policy",
+   "question": "What do I need to do before proposing for LBTI, and how must LBTI be acknowledged in papers?",
+   "answer": "## Before proposing\n\n- **Consult the LBTI team (required).** As a minimum, teams must obtain approval from the Lead Scientist before submitting a proposal. This should be done by email to lbtipi@lbto.org approx. one week before the relevant proposal deadline. The email should contain a description of the project or a proposal draft, together with the amount of observing time requested.[1] The goal of this process is NOT to limit access to the LBTI.\n- **Talk to the Lead Scientist early.** It is advisable to consult the LBTI Lead Scientist (Steve Ertel, sertel@lbti.org) before preparing an observing proposal, and the LBTI team will help plan the project and develop the technical case.[2]\n- **Using ALES?** ALES requires collaboration with the ALES team. Contact Jordan Stone at jordan@lbti.org in addition to the general request to lbtipi@lbto.org.[1]\n- **Complex scripting or classical scheduling:** For complex observations that require automation, contact the Lead Scientist as early as possible, ideally before submitting the proposal.[3] Classically scheduled programs (except transient events) are limited to half or full nights. Waivers can be requested from the Lead Scientist before submitting the proposal.[4]\n- **Other policy terms you accept by proposing:** Team members who enable or support a specific observation must be given the opportunity to be involved in the project, with the possibility of becoming co-authors.[5] The policy also applies to data from other LBT instruments taken in parallel with LBTI observations during scheduled LBTI time.[6]\n\nIf your proposal is accepted, the LBTI team will ask for a README file and a target observability sheet.[4]\n\n## Acknowledging LBTI in papers\n\n- 'LBTI' shall be mentioned in the title or abstract of the paper.[7]\n- The acknowledgements must include: *\"We acknowledge the use of the Large Binocular Telescope Interferometer (LBTI) and the support from the LBTI team, specifically from XX.\"*[7]\n- Replace 'XX' with a list of team members who enabled or supported the observations but are not co-authors. If unsure, ask Steve Ertel (sertel@lbti.org).[7]",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=8",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=45",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=53",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=52",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=9",
+    "https://scienceops.lbto.org/lbti/lbti-user-policy/",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=10"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\n**Reason:** The answer covers both parts of the question correctly. It gives the required pre-submission step (email to lbtipi@lbto.org about one week before the deadline, with a project description or draft and the requested time), the advisable early contact with Steve Ertel, and the ALES contact (Jordan Stone). For publications, it correctly states that 'LBTI' must appear in the title or abstract and gives the acknowledgement phrase with the XX placeholder. The citations map to the right sections (2.2, 4, 4.4, 4.5, 2.3, 2.4), and no numbers or contact details are wrong.\n\nMinor issues keep it from a 5:\n- \"Other policy terms you accept by proposing\" adds a framing the manual does not state. The policy items apply to LBTI use generally, not as a consequence of submitting a proposal.\n- The waiver bullet says waivers are requested \"before submitting the proposal,\" but the manual also allows requests \"when preparing the observations.\"\n- It omits that ALES provides pre-reduced calibrated spectral image cubes, which is the main benefit of the ALES collaboration."
+  },
+  {
+   "id": "phasecam-limit",
+   "question": "What is the limiting magnitude for fringe tracking with PhaseCam?",
+   "answer": "**The manual gives a limiting magnitude of K ≈ 4.5 for fringe tracking with PhaseCam.** The approach of imaging the wavefronts in the pupil plane results in a relatively bright limiting magnitude for fringe tracking with the LBTI of K 4.5.[1]\n\n- **Planned upgrade:** A detector upgrade to a SAPHIRA array, plus other system improvements, is expected to extend the limiting magnitude to K 9.5. Commissioning was expected in summer and fall 2022.[1]\n- **Status unclear:** The manual does not say whether the upgrade has been commissioned. Treat K 4.5 as the documented value, and check with LBTO science operations before planning around K 9.5.\n- **Source:** Only the PDF (v0.11, section 3.6.3) returned this figure. My searches found no web-page value to compare it with.\n- **Context:** The K 4.5 limit severely restricts fringe-tracked Fizeau imaging of targets such as stars in star-forming regions.[1]",
+   "searches": 2,
+   "sources": [
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=44"
+   ],
+   "recall_at_6": true,
+   "cites_expected": true,
+   "score": 4,
+   "judge": "SCORE: 4\n\nThe answer gives the correct figures: K ≈ 4.5 as the current limiting magnitude for PhaseCam fringe tracking, and a planned SAPHIRA-based upgrade expected to reach K 9.5. Both are supported by the cited section 3.6.3, and the context about fringe-tracked Fizeau imaging is accurate.\n\nIt loses a point for a few issues:\n- It says the web-page searches found no value to compare against, which brings in sources outside the manual-only scope. It also doesn't mention that web pages are canonical and the PDF is an older snapshot, so the reader isn't told the figure may have been superseded.\n- The advice to \"check with LBTO science operations\" is not from the manual.\n- The \"status unclear\" point is a reasonable inference, but the answer could have said more plainly that the document's 2022 commissioning timeline is outdated."
+  },
+  {
+   "id": "oos-mods",
+   "question": "What is the readout noise of MODS?",
+   "answer": "MODS is a different LBT instrument, and this assistant covers only the LBTI. For MODS readout noise and other specifications, please see the MODS manual on the LBTO science-operations site.\n\nIf you have questions about LBTI instruments (e.g., NOMIC or LMIRCam), I'm happy to help.",
+   "searches": 0,
+   "sources": [],
+   "abstained": true,
+   "judge": "ABSTAINED: yes. The response clearly states that the question is outside the LBTI manual's scope (MODS is a different instrument), gives no readout noise value or other numbers, and points the user to the MODS manual instead."
+  },
+  {
+   "id": "oos-luci",
+   "question": "How do I design a LUCI multi-object spectroscopy mask?",
+   "answer": "LUCI is a different LBT instrument, and this assistant covers only the LBTI. For LUCI multi-object spectroscopy mask design, please see the LUCI manual on the LBTO science-operations site.\n\nIf you have questions about LBTI (e.g., NOMIC, LMIRCam, nulling, or observation preparation), I'm happy to help.",
+   "searches": 0,
+   "sources": [],
+   "abstained": true,
+   "judge": "ABSTAINED: yes. The answer states that the LBTI manual does not cover the question, gives no technical facts or numbers about LUCI mask design, and redirects the user to the LUCI manual."
+  },
+  {
+   "id": "oos-cost",
+   "question": "How much does one night of LBTI observing time cost in US dollars?",
+   "answer": "The cost of LBTI observing time in US dollars is not covered in the LBTI manual. The searches returned no pricing or fee information.\n\nThe manual does cover how time is allocated and requested:\n- Time allocated to LBTI programs is wall clock time.[1]\n- Targeted high-contrast observations are commonly allocated half-nights (5 h) per target, including all overheads.[1]\n- Teams should obtain approval from the LBTI Lead Scientist before submitting a proposal, by email to lbtipi@lbto.org about one week before the deadline.[2]\n\nFor a dollar figure, please contact LBTO science operations.",
+   "searches": 1,
+   "sources": [
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=55",
+    "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf#page=8"
+   ],
+   "abstained": true,
+   "judge": "ABSTAINED: yes. The answer clearly states that the manual does not cover the cost in US dollars and gives no price or fee figure; the time-allocation details it includes do not answer the cost question."
+  }
+ ]
+}

@@ -1,6 +1,6 @@
 PY ?= .venv/bin/python
 
-.PHONY: venv ingest index test run
+.PHONY: venv ingest index test eval run
 
 venv:     ## Python 3.12 virtualenv with the dev dependencies
 	python3.12 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
@@ -13,6 +13,9 @@ index:    ## index the committed content/ (no network)
 
 test:
 	$(PY) -m pytest -q
+
+eval:     ## golden questions through Claude (~$1)
+	$(PY) -m scripts.eval
 
 run: index  ## http://localhost:8000 with reload
 	$(PY) -m uvicorn --factory app.main:create_app --reload

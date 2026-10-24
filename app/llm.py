@@ -66,12 +66,12 @@ class Chat:
             text     answer text, with [n] markers after cited passages
             retract  drop the text so far: it was narration before a search, not the answer
             sources  the numbered list of cited sections
-        Fills `out` with the new message history, the answer and the sources. History is only ever
-        appended to, so cached prefixes stay valid."""
+        Fills `out` with the new message history, the answer, the sources and the URLs of the sections found by
+        the first search (used by the eval). History is only ever appended to, so cached prefixes stay valid."""
         messages = [*history, {"role": "user", "content": question}]
         sources: dict[str, dict] = {}   # source URL -> {n, source, title, cited_text}
         answer: list[str] = []
-        out.update(messages=messages, searches=0)
+        out.update(messages=messages, first_found=[], searches=0)
 
         for round_no in range(self.cfg.max_searches + 1):
             request = dict(model=self.cfg.model, max_tokens=self.cfg.max_tokens, system=self.system, tools=self.tools,
@@ -131,9 +131,13 @@ class Chat:
                 answer.clear()
                 yield {"type": "retract"}
             out["searches"] += 1
-            messages.append({"role": "user", "content": [
-                {"type": "tool_result", "tool_use_id": call.id, "content": self.manual.run_tool(call.input or {})}
-                for call in calls]})
+            results = []
+            for call in calls:
+                content = self.manual.run_tool(call.input or {})
+                if out["searches"] == 1:
+                    out["first_found"] += [b["source"] for b in content if b["type"] == "search_result"]
+                results.append({"type": "tool_result", "tool_use_id": call.id, "content": content})
+            messages.append({"role": "user", "content": results})
 
         out["answer"] = "".join(answer).strip()
         out["sources"] = sorted(sources.values(), key=lambda s: s["n"])

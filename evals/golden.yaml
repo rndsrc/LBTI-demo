@@ -1,0 +1,183 @@
+# Golden eval set for the LBTI Assistant, written from the ingested content (content/, ingested 2026-10-26).
+# expected_section_ids: 1-3 sections that contain the answer.
+# expected_answer: the key fact(s), quoted from the manual.
+# type: answerable | out_of_scope  (out_of_scope = the manual does not cover it; the assistant must say so)
+
+questions:
+  # --- Filters --------------------------------------------------------------------------------
+  - id: lmircam-filters
+    question: What filters are available in LMIRCam?
+    expected_section_ids:
+      - web:lmircam-filters#broadband-filters-and-spectroscopic-order-sorters
+      - web:lmircam-filters#narrowband-filters
+    expected_answer: >-
+      Broadband filters include Mauna Kea J (1.25 µm), H (1.65 µm), Ks (2.16 µm), LShort (3.31 µm),
+      StdL (3.70 µm, 3.41–3.99 µm), L-Spec, Janos (3.0–5.0 µm) and StdM (4.78 µm, 4.60–4.97 µm); there are
+      also many narrowband filters (e.g. Fe-II 1.645 µm, H2O-Ice2 3.08 µm, PAH 1 3.2525 µm, L-cont. 1–4).
+  - id: nomic-nprime
+    question: What are the central wavelength and bandpass of the NOMIC Nprime filter?
+    expected_section_ids: [web:nomic-filters#overview]
+    expected_answer: Nprime is in FW1 with λc = 11.11 µm and a range of 10.22–12.49 µm; it is the standard HOSTS filter.
+  - id: ice-filter
+    question: Which LMIRCam narrowband filter is meant for water ice and what wavelength range does it cover?
+    expected_section_ids: [web:lmircam-filters#narrowband-filters]
+    expected_answer: H2O-Ice2 in FW4, λc = 3.08 µm, range 3.01–3.15 µm (crystalline ice peak, sub-micron grains).
+  - id: nir-leakage
+    question: How do I prevent L-band light leakage when imaging in J, H or Ks with LMIRCam?
+    expected_section_ids: [web:lmircam-filters#broadband-filters-and-spectroscopic-order-sorters, web:lmircam-filters#setup]
+    expected_answer: Set the BeamDVT (beam diverter) to the window and use the PK50 blocker in FW4.
+
+  # --- Grisms, prisms, masks -------------------------------------------------------------------
+  - id: grisms
+    question: What grisms are available for LMIRCam and in which bands do they work?
+    expected_section_ids: [web:lmircam-prism-grisms-other#grisms]
+    expected_answer: >-
+      L-Grism #6 (FW 3, position 8; 40 g/mm, blaze 2.8°, peak efficiency 3.6 µm, L band in first order) and
+      M-Grism #1 (FW 3, position 9; 32 g/mm, blaze 2.8°, peak 4.4 µm in M band first order and 2.3 µm in K band second order).
+  - id: nales-prism-resolution
+    question: What spectral resolution does the NALES 2.8–4.2 µm prism give?
+    expected_section_ids: [web:lmircam-prism-grisms-other#nales-prisms, web:nales#nales]
+    expected_answer: R ~40 in the L band (IFU prisms ZnSe+AlO2, FW 3 position 3).
+  - id: nrm-masks
+    question: Which non-redundant masks does LMIRCam have and where are they mounted?
+    expected_section_ids: [web:lmircam-prism-grisms-other#apertures-and-masks, web:modes-and-strategies#modes-and-strategies]
+    expected_answer: A 24-hole non-redundant mask (aperture wheel position 6) and a 12-hole mask (position 7).
+
+  # --- Detectors -------------------------------------------------------------------------------
+  - id: lmircam-saturation
+    question: What are the saturation level and 5% non-linearity level of the LMIRCam detector in fast mode?
+    expected_section_ids: [web:detectors#characteristics, web:detectors#saturation]
+    expected_answer: Fast mode saturates at 3900 and reaches 5% non-linearity at 2900 (medium/slow modes 62000 and 47500).
+  - id: stripe-frame-time
+    question: What is the frame time of the LMIRCam Center_Stripe_256 readout?
+    expected_section_ids: [web:detectors#readout-stripes, pdf:p26#3-4-2-lmircam-detector]
+    expected_answer: 3.4 ms on the web page (rows 1025–1280); the PDF Table 3.4 lists 3.4 with a [s] column header.
+  - id: nomic-detector
+    question: What kind of detector does NOMIC use and what is its pixel scale?
+    expected_section_ids: [web:nic#nomic-overview, web:detectors#characteristics, pdf:p38#3-5-2-nomic-detector]
+    expected_answer: A Raytheon 1024×1024 Si:As IBC Aquarius array (30 µm pitch) giving 0.018″ (17.9 mas) pixels.
+
+  # --- AO / WFS --------------------------------------------------------------------------------
+  - id: soul-vs-flao
+    question: How did the SOUL upgrade improve the LBTI adaptive optics compared to FLAO?
+    expected_section_ids: [web:ao-wfs#soul-wfs]
+    expected_answer: >-
+      SOUL has 40×40 subapertures (vs 30×30), read noise <1 e- (vs 10e-/4e-), 500/650 modes (vs 400/500),
+      a faster ASM rise time (<0.7 ms vs <1 ms) and 1.7 kHz frame rate (vs 1 kHz).
+  - id: ao-reference-magnitude
+    question: How bright does the AO reference source need to be for LBTI?
+    expected_section_ids: [pdf:p14#3-1-lbti-wavefront-sensors-and-ao-performance]
+    expected_answer: R or I < 18 for operation, and R or I < 12 for peak performance (PDF Table 3.1).
+
+  # --- Observing modes -------------------------------------------------------------------------
+  - id: single-vs-double
+    question: What is the difference between single-sided and double-sided non-overlapped AO imaging?
+    expected_section_ids: [web:ao-imaging#ao-imaging, web:lbti-home#available-modes]
+    expected_answer: >-
+      Single-sided imaging is background limited and uses a cold stop to block one telescope; double-sided
+      non-overlapped imaging is speckle limited, with the two AO images side by side separated by ~half the FoV.
+  - id: nales-wavecal
+    question: How are NALES/ALES wavelength calibrations done and how long do they take?
+    expected_section_ids: [web:calibrations#calibrations, web:nales#observing-approach, web:overheads#overheads]
+    expected_answer: >-
+      With four narrow-band filters (2.9, 3.3, 3.5 and 3.9 µm) in series with the ALES optics, taken before
+      moving any ALES optics; about 20 minutes.
+  - id: nales-nodding
+    question: What nodding strategy is used for NALES observations?
+    expected_section_ids: [web:nales#observing-approach]
+    expected_answer: Often a 3-point nod between primary, secondary and sky; for self-guided targets a 2-point nod (source to sky and back) suffices.
+  - id: nulling-setup
+    question: How is a nulling observation set up and executed?
+    expected_section_ids: [web:nulling#nulling]
+    expected_answer: >-
+      The interferometer is tuned to null by adjusting the phase sensor setpoint while measuring the flux at 11 µm;
+      observations take many (~1000) short (~50 ms) exposures per pointing, with at least one CAL-SCI pair at matched elevation.
+
+  # --- Overheads -------------------------------------------------------------------------------
+  - id: nulling-overhead
+    question: What overhead should I expect for nulling alignment and setup?
+    expected_section_ids: [web:overheads#overheads, pdf:p55#4-7-overheads-time-request-and-execution-time]
+    expected_answer: The web page lists 600 s typical and 3600 s maximum; the PDF v0.11 Table 4.4 lists 1200 s for alignment nulling.
+  - id: time-per-target
+    question: How much telescope time is typically allocated per target for targeted high-contrast imaging?
+    expected_section_ids: [pdf:p55#4-7-overheads-time-request-and-execution-time]
+    expected_answer: Half-nights (5 h) per target including overheads; shallower surveys as little as 2 h, snapshots ~30 min.
+
+  # --- Calibrations ----------------------------------------------------------------------------
+  - id: routine-calibrations
+    question: Which calibrations does the LBTI team take routinely without charging my program?
+    expected_section_ids: [pdf:p53#4-5-observing-scripts, pdf:p54#4-6-calibration]
+    expected_answer: >-
+      LMIRCam and NOMIC linearity (1/semester), LMIRCam distortion (1/observing run), LMIRCam astrometry
+      (1/year, Trapezium), NOMIC distortion (1/run, best effort) and darks (1/observation).
+  - id: psf-calibrator
+    question: What makes a good PSF calibrator for LBTI imaging?
+    expected_section_ids: [web:calibrations#calibrations]
+    expected_answer: A nearby star with similar magnitude and colour to the science field's wavefront reference source; it should not be saturated.
+
+  # --- Planning: finding charts, README ---------------------------------------------------------
+  - id: finding-chart
+    question: What does a finding chart for LBTI need to show?
+    expected_section_ids: [web:finding-charts#finder-chart-requirements]
+    expected_answer: >-
+      The science target (or reference source and offsets), the target/script name, North and East, a scale bar
+      in arcsec/arcmin, the band/filter matching the LBT acquisition image, and a similar depth.
+  - id: readme-targets
+    question: What target information must I include in the observing README?
+    expected_section_ids: [web:readme#readme]
+    expected_answer: >-
+      A unique identifier (SIMBAD if possible), RA & DEC, magnitude in R or I and in the science filters, the AO
+      guide star separation (0.0 if the target is the guide star) and its R or I magnitude, plus finder charts.
+
+  # --- Scripts & software ----------------------------------------------------------------------
+  - id: scripts
+    question: How are LBTI observations scripted?
+    expected_section_ids: [web:software-scripts#scripting, pdf:p53#4-5-observing-scripts]
+    expected_answer: >-
+      Python scripts send INDI commands to configure the instrument and take exposures; template scripts per mode
+      include nod patterns, darks and sky offsets, while many alignments remain manual.
+
+  # --- Data retrieval & reduction ----------------------------------------------------------------
+  - id: data-retrieval
+    question: How do I retrieve my LMIRCam and NOMIC data?
+    expected_section_ids: [web:data-retrieval-reduction-publication#data-access, pdf:p57#4-8-data-retrieval-and-reduction]
+    expected_answer: LMIRCam data are available through the LBTO archive (possibly with some delay); NOMIC data acquisition is coordinated through the LBTI team.
+  - id: distortion
+    question: How do I correct LMIRCam images for optical distortion?
+    expected_section_ids:
+      - web:distortion-correction-and-astrometric-solution#optical-distortion-correction
+      - web:calibrations#calibrations
+    expected_answer: >-
+      Distortion is measured from images of a pinhole grid at the NIC entrance; the team provides the distortion
+      solutions (matrices) for download and a basic Python package to apply them.
+
+  # --- Policy -----------------------------------------------------------------------------------
+  - id: user-policy
+    question: What do I need to do before proposing for LBTI, and how must LBTI be acknowledged in papers?
+    expected_section_ids: [web:lbti-user-policy#lbti-user-policy, web:data-retrieval-reduction-publication#lbti-user-policy]
+    expected_answer: >-
+      Consult the LBTI team before submission via lbtipi@lbto.org; mention 'LBTI' in the title or abstract and
+      include the acknowledgement phrase naming the supporting team members.
+
+  # --- PhaseCam ---------------------------------------------------------------------------------
+  - id: phasecam-limit
+    question: What is the limiting magnitude for fringe tracking with PhaseCam?
+    expected_section_ids: [pdf:p44#3-6-3-limiting-magnitude]
+    expected_answer: About K = 4.5; a planned SAPHIRA detector upgrade is expected to extend it to K = 9.5.
+
+  # --- Not covered by the manual ------------------------------------------------------------------
+  - id: oos-mods
+    type: out_of_scope
+    question: What is the readout noise of MODS?
+    expected_section_ids: []
+    expected_answer: Not covered in the LBTI manual (MODS is a different LBT instrument); no numbers should be given.
+  - id: oos-luci
+    type: out_of_scope
+    question: How do I design a LUCI multi-object spectroscopy mask?
+    expected_section_ids: []
+    expected_answer: Not covered in the LBTI manual; refer to the LUCI documentation.
+  - id: oos-cost
+    type: out_of_scope
+    question: How much does one night of LBTI observing time cost in US dollars?
+    expected_section_ids: []
+    expected_answer: Not covered in the LBTI manual; no price should be stated.

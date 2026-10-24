@@ -87,3 +87,46 @@ make index                  # rebuild index/kb.sqlite from content/ without craw
   counter. Today it is **83,804 tokens**, 51,463 of them in the PDF.
 - **Section ids** are stable and readable, e.g. `web:lmircam-filters#narrowband-filters` or
   `pdf:p55#4-7-overheads-time-request-and-execution-time`.
+
+## Evaluation
+
+`make eval` runs the 30 questions in `evals/golden.yaml` through the same code the web app uses:
+
+- **Topics:** filters, grisms, detectors, AO, observing modes, overheads, calibrations, finding charts,
+  scripts, data retrieval, astrometry and user policy.
+- **Out of scope:** 3 questions the manual does not answer.
+- **Web/PDF disagreements:** two questions where the web page and the PDF disagree.
+
+It reports four measures:
+
+- **recall@6:** an expected section is among the first search's results.
+- **cites expected:** the answer cites an expected section.
+- **judge mean:** a 1–5 grade from `claude-haiku-5-5`, which sees the reference answer and the cited
+  passages.
+- **abstentions:** the out-of-scope questions are answered "not covered".
+
+| Run (2026-10-24) | recall@6 | cites expected | judge mean | abstentions |
+|---|---:|---:|---:|---:|
+| `claude-sonnet-5-5` | 1.00 | 1.00 | 4.30 | 3/3 |
+
+Per-question results are in `evals/last_run.json`.
+
+## Cost
+
+A typical question takes two Claude calls: one that decides what to search, and one that reads the search
+results and answers. Each call's token usage is logged as one JSON line:
+
+```
+{"event": "claude", "round": 0, "stop": "tool_use", "input_tokens": 4, "output_tokens": 128,
+ "cache_creation_input_tokens": 94, "cache_read_input_tokens": 977}
+{"event": "claude", "round": 1, "stop": "end_turn", "input_tokens": 2, "output_tokens": 219,
+ "cache_creation_input_tokens": 13624, "cache_read_input_tokens": 1767}
+```
+
+- **Round 0:** the cached tool and system prompt are read back (977 tokens).
+- **Round 1:** the search results (13.6k tokens) are written to the cache, so a follow-up question reads them
+  back cheaply.
+
+On Claude Sonnet 5.5 this comes to about 4 cents per question. To cap spending on a public demo, set a monthly
+spend limit on the API key's workspace in the Claude Console; the per-IP limit only slows individual visitors
+down.
