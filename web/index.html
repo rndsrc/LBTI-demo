@@ -16,11 +16,23 @@
     <span class="brand">◎◎ LBTI Assistant</span>
     <button type="button" id="new-chat">New chat</button>
   </header>
+  <p class="banner">Answers are generated from the LBTI User's Manual (web pages + PDF <span id="version">…</span>,
+    ingested <span id="ingested">…</span>). Verify critical values in the
+    <a id="manual" href="https://scienceops.lbto.org/lbti/lbti-users-manual/" target="_blank" rel="noopener">manual</a>
+    before observing.</p>
   <main id="chat">
     <section id="welcome">
       <h1>Ask the LBTI manual</h1>
       <p>Filters, detectors, adaptive optics, observing modes, overheads, calibrations, scripts and data reduction
         for the Large Binocular Telescope Interferometer. Every answer cites the manual section it comes from.</p>
+      <div id="examples">
+        <button type="button">What filters are available in LMIRCam?</button>
+        <button type="button">What are the central wavelength and bandpass of the NOMIC Nprime filter?</button>
+        <button type="button">What are the saturation level and 5% non-linearity of the LMIRCam detector in fast mode?</button>
+        <button type="button">How is a nulling observation set up and executed?</button>
+        <button type="button">What overhead should I expect for nulling alignment and setup?</button>
+        <button type="button">How do I retrieve my LMIRCam and NOMIC data?</button>
+      </div>
     </section>
     <ol id="messages"></ol>
   </main>

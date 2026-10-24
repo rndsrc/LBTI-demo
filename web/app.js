@@ -6,6 +6,15 @@
   let conversationId = null;
   let controller = null;
 
+  // Manual version for the banner; example questions ask themselves when clicked.
+  fetch("/api/info").then((r) => r.json()).then((info) => {
+    $("version").textContent = info.pdf_version;
+    $("ingested").textContent = info.ingested_at;
+    $("manual").href = info.manual_url;
+    $("input").maxLength = info.max_chars;
+  });
+  document.querySelectorAll("#examples button").forEach((b) => { b.onclick = () => { $("input").value = b.textContent; ask(); }; });
+
   // Render the answer as sanitised Markdown, then turn [n] markers into citation chips.
   function render(msg) {
     msg.body.innerHTML = DOMPurify.sanitize(marked.parse(msg.raw), { FORBID_TAGS: ["img", "style", "form"] });

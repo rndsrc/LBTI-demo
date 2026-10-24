@@ -19,6 +19,7 @@ class Config:
     rate_per_hour: int = 30            # questions per client IP, to protect the API key on a public demo
     content_dir: Path = ROOT / "content"
     index_dir: Path = ROOT / "index"
+    manual_url: str = "https://scienceops.lbto.org/lbti/lbti-users-manual/"
     pdf_url: str = "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf"
     pdf_version: str = "v0.11"
 

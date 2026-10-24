@@ -58,6 +58,11 @@ def create_app(cfg: Config | None = None, client: anthropic.AsyncAnthropic | Non
         response.headers.update(SECURITY_HEADERS)
         return response
 
+    @app.get("/api/info")
+    def info():
+        return {"pdf_version": manual.meta["pdf_version"], "ingested_at": manual.meta["ingested_at"][:10],
+                "manual_url": cfg.manual_url, "max_chars": cfg.max_question_chars}
+
     @app.get("/healthz")
     def healthz():
         return {"status": "ok", "sections": len(manual.sections), "ingested_at": manual.meta["ingested_at"]}

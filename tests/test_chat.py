@@ -65,8 +65,10 @@ def test_limits(cfg):
         assert client.post("/api/chat", json={"message": "hi"}).status_code == 429  # 5 per hour in this config
 
 
-def test_page_and_health(cfg):
+def test_page_info_and_health(cfg):
     with TestClient(create_app(cfg, client=FakeClient([]))) as client:
         page = client.get("/")
         assert page.status_code == 200 and "default-src 'self'" in page.headers["content-security-policy"]
+        assert "What filters are available in LMIRCam?" in page.text
+        assert client.get("/api/info").json()["pdf_version"] == "v0.11"
         assert client.get("/healthz").json()["sections"] == 3
