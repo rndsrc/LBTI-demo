@@ -1,0 +1,12 @@
+# docker compose up -d --build      build this checkout and serve http://localhost:8000
+# docker compose pull && docker compose up -d     run a published image instead (LBTI_IMAGE in .env)
+services:
+  lbti:
+    image: ${LBTI_IMAGE:-lbti-demo}
+    build: .
+    env_file: .env
+    ports: ["${PORT:-8000}:8000"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped

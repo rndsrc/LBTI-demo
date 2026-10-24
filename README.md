@@ -13,6 +13,8 @@ It is meant as a readable example of how to serve a document collection with an 
 - stream grounded answers;
 - measure quality with a small eval.
 
+The whole package, tests included, is about 1,500 lines.
+
 ## Design
 
 ```
@@ -66,13 +68,31 @@ It is meant as a readable example of how to serve a document collection with an 
 
 ## Run it
 
-You need Python 3.12 and an Anthropic API key. Then open <http://localhost:8000>.
+You need an Anthropic API key and either Python 3.12 or Docker. Then open <http://localhost:8000>.
+
+**From source:**
 
 ```bash
 make venv                                   # .venv with the dependencies
 echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
 make run                                    # index content/, then serve with auto-reload
 ```
+
+**With Docker**, building the image from this checkout:
+
+```bash
+echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
+docker compose up -d --build
+```
+
+Or run an image someone has published:
+
+```bash
+docker run -d --env-file .env -p 8000:8000 --read-only <username>/lbti-demo
+```
+
+The image already contains the manual and its search index. It needs no volume and writes nothing to disk.
+Conversations are kept in memory, so a restart forgets them.
 
 ## The knowledge base
 
@@ -87,6 +107,24 @@ make index                  # rebuild index/kb.sqlite from content/ without craw
   counter. Today it is **83,804 tokens**, 51,463 of them in the PDF.
 - **Section ids** are stable and readable, e.g. `web:lmircam-filters#narrowband-filters` or
   `pdf:p55#4-7-overheads-time-request-and-execution-time`.
+
+## Configuration
+
+Settings come from environment variables, or from a `.env` file (see `.env.example`). Only
+`ANTHROPIC_API_KEY` is required.
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | — | Claude API key (required) |
+| `MODEL` | `claude-sonnet-5-5` | `claude-haiku-5-5` is much cheaper but less accurate |
+| `MAX_TOKENS` | `2048` | maximum answer length |
+| `MAX_SEARCHES` | `5` | searches per question before an answer is forced |
+| `MAX_QUESTION_CHARS` | `2000` | longest accepted question |
+| `MAX_TURNS` | `20` | questions per conversation |
+| `RATE_PER_HOUR` | `30` | questions per client IP per hour |
+| `PDF_URL`, `PDF_VERSION`, `MANUAL_URL` | manual v0.11 | sources for `make ingest`, shown in the banner |
+| `LBTI_IMAGE`, `PORT` | `lbti-demo`, `8000` | `docker compose`: image to run, host port |
+| `FORWARDED_ALLOW_IPS` | `127.0.0.1` | read by uvicorn: proxies whose `X-Forwarded-For` is trusted |
 
 ## Evaluation
 
@@ -130,3 +168,33 @@ results and answers. Each call's token usage is logged as one JSON line:
 On Claude Sonnet 5.5 this comes to about 4 cents per question. To cap spending on a public demo, set a monthly
 spend limit on the API key's workspace in the Claude Console; the per-IP limit only slows individual visitors
 down.
+
+## Deploying publicly
+
+The container serves plain HTTP on port 8000. To expose it, put a TLS reverse proxy in front of it, e.g.
+`caddy reverse-proxy --from lbti.example.org --to localhost:8000`, and set `FORWARDED_ALLOW_IPS` to the
+proxy's address so the per-IP limit sees real clients. `docker-compose.yml` runs the container as `nobody`
+with a read-only filesystem, no Linux capabilities and `no-new-privileges`.
+
+**Publishing the image.**
+
+- **By hand:**
+
+  ```bash
+  docker buildx build --platform linux/amd64,linux/arm64 -t <username>/lbti-demo --push .
+  ```
+
+## Notes
+
+- **Search instead of the whole manual.** The 84k-token corpus would fit in one prompt. Searching keeps each
+  request to a few relevant sections, makes citations precise, and scales to larger document sets.
+- **Plain BM25.** On this corpus it found an expected section in the first search for every answerable eval
+  question, so there are no embeddings or vector database.
+- **No `temperature`.** API version `2026-10-21`, which the `anthropic` 2.3 SDK uses, no longer accepts
+  sampling parameters. Answers are grounded by search and citations instead.
+- **Thinking off.** Extended thinking is not used. Claude Sonnet 5.5 rejects `{"type": "disabled"}`; its
+  lowest setting is `{"type": "between_tools"}`.
+- **PDF conversion.** `pymupdf4llm` runs in non-layout mode, because layout mode merged numbered headings
+  into paragraphs on this PDF. Borderless tables come out as one row per line.
+- **Pinned PDF libraries.** `pymupdf4llm`/`pymupdf` "2.0" on PyPI is an empty package, so the Artifex 1.28.2
+  release is pinned.

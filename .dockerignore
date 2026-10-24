@@ -1,0 +1,15 @@
+.git/
+.github/
+.venv/
+.claude/
+.pytest_cache/
+**/__pycache__/
+*~
+.env
+index/
+data/
+tests/
+evals/last_run.json
+docker-compose.yml
+Makefile
+README.md
