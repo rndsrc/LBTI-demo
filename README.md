@@ -63,3 +63,13 @@ It is meant as a readable example of how to serve a document collection with an 
 | `web/` | chat page (HTML, JavaScript, CSS) |
 | `scripts/eval.py` | golden-question evaluation |
 | `tests/` | ingest, search and chat tests, with a fake Claude client |
+
+## Run it
+
+You need Python 3.12 and an Anthropic API key. Then open <http://localhost:8000>.
+
+```bash
+make venv                                   # .venv with the dependencies
+echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
+make run                                    # serve with auto-reload
+```
