@@ -14,6 +14,8 @@ class Config:
     model: str = "claude-sonnet-5-5"   # ANTHROPIC_API_KEY is read by the anthropic SDK itself
     max_tokens: int = 2048             # per answer
     content_dir: Path = ROOT / "content"
+    pdf_url: str = "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf"
+    pdf_version: str = "v0.11"
 
     @classmethod
     def from_env(cls) -> Config:

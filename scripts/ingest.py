@@ -1,4 +1,4 @@
-"""Fetch the LBTI User's Manual web pages and convert them to Markdown in content/web/.
+"""Fetch the LBTI User's Manual (web pages + PDF) and convert it to Markdown in content/.
 
     python -m scripts.ingest
 
@@ -210,6 +210,70 @@ def crawl_web(cfg: Config, client) -> list[str]:
 
 
 # --------------------------------------------------------------------------------------------------
+# PDF -> Markdown
+# --------------------------------------------------------------------------------------------------
+
+def _clean_pdf_text(line: str) -> str:
+    """Undo pymupdf4llm styling artefacts that hurt search and citations."""
+    line = re.sub(r"</?u>", "", line)
+    line = re.sub(r"~~(\w{1,2})~~\s?", r"\1", line)        # "Full ~~I~~ mage" -> "Full Image"
+    line = re.sub(r"\*\*\s+\*\*", " ", line)              # "**Table** **3.4:**" -> "**Table 3.4:**"
+    line = re.sub(r"\*\*\*\*", "", line)
+    line = re.sub(r"\s?_([^\w\s_])_\s?", lambda m: {".": ".", ",": ", "}.get(m.group(1), f" {m.group(1)} "), line)
+    line = re.sub(r"(\d)\s\.\s?(\d)", r"\1.\2", line)     # "55 . 0 ms" -> "55.0 ms"
+    return re.sub(r"[ \t]{2,}", " ", line)
+
+
+def clean_pdf_pages(pages: list[str]) -> str:
+    """Join pages with <!-- page: N --> markers, drop running headers and page numbers, and set heading
+    levels from the numbering: chapter "N" -> '#', "N.M" -> '##', "N.M.K" -> '###', unnumbered -> '##'."""
+    out = []
+    for n, raw in enumerate(pages, start=1):
+        lines = raw.splitlines()
+        idx = [i for i, line in enumerate(lines) if line.strip()]
+        if idx and re.fullmatch(r"(_[^_\n]+_\s*)+", lines[idx[0]].strip()):
+            lines[idx[0]] = ""
+        if idx and re.fullmatch(r"[ivxlc\d]+", lines[idx[-1]].strip(), re.I):
+            lines[idx[-1]] = ""
+        fixed = []
+        for line in lines:
+            if not line.startswith("#"):
+                fixed.append(_clean_pdf_text(line.rstrip()))
+                continue
+            text = re.sub(r"\s+", " ", re.sub(r"</?u>|\*\*|__", "", line.lstrip("#"))).strip()
+            if m := re.match(r"(\d+(?:\.\d+)*)\s+\S", text):
+                fixed.append("#" * min(m.group(1).count(".") + 1, 3) + " " + text)
+            elif text.lower().startswith("version") or n == 1:
+                fixed.append("# " + text if text.lower() == "lbti user manual" else text)
+            else:
+                fixed.append("## " + text)
+        out.append(f"<!-- page: {n} -->\n\n" + re.sub(r"\n{3,}", "\n\n", "\n".join(fixed)).strip())
+    return "\n\n".join(out) + "\n"
+
+
+def fetch_pdf(cfg: Config, client) -> bool:
+    import pymupdf
+    import pymupdf4llm
+
+    r = client.get(cfg.pdf_url, timeout=120)
+    r.raise_for_status()
+    path = cfg.content_dir / "pdf" / f"LBTI_user_manual_{cfg.pdf_version}.md"
+    digest = hashlib.sha256(r.content).hexdigest()
+    if path.exists() and read_doc(path)[0].get("source_sha256") == digest:
+        return False
+    # Non-layout mode: layout mode merged numbered headings into paragraphs on this manual.
+    pymupdf4llm.use_layout(False)
+    chunks = pymupdf4llm.to_markdown(pymupdf.open(stream=r.content, filetype="pdf"), page_chunks=True,
+                                     table_strategy="lines_strict", show_progress=False)
+    for old in path.parent.glob("LBTI_user_manual_*.md"):  # index only the configured version
+        old.unlink()
+    meta = {"url": cfg.pdf_url, "title": f"LBTI User's Manual (PDF {cfg.pdf_version})",
+            "breadcrumb": f"LBTI User's Manual PDF {cfg.pdf_version}", "version": cfg.pdf_version,
+            "fetched_at": now_iso(), "source_sha256": digest}
+    return write_doc(path, meta, clean_pdf_pages([c["text"] for c in chunks]))
+
+
+# --------------------------------------------------------------------------------------------------
 # Entry point
 # --------------------------------------------------------------------------------------------------
 
@@ -220,6 +284,8 @@ def main() -> None:
 
     with httpx.Client(headers={"User-Agent": USER_AGENT}, timeout=30, follow_redirects=True) as client:
         changed = crawl_web(cfg, client)
+        if fetch_pdf(cfg, client):
+            changed.append(cfg.pdf_url)
     print("changed:", *changed or ["nothing"], sep="\n  ")
 
 

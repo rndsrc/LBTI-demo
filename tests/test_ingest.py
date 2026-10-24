@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from scripts.ingest import WEB_URLS, breadcrumbs, extract_main
+from scripts.ingest import WEB_URLS, breadcrumbs, clean_pdf_pages, extract_main
 from tests.conftest import FIXTURES
 
 URL = "https://scienceops.lbto.org/lbti/instrument-characteristics/lmircam-filters/"
@@ -40,3 +40,11 @@ def test_breadcrumbs_follow_navigation_tree():
     titles[URL] = "LMIRCam Filters"
     crumbs = breadcrumbs(titles)
     assert crumbs[URL] == "Instrument Characteristics › LMIRCam Filters"
+
+
+def test_pdf_pages_are_cleaned():
+    body = clean_pdf_pages(["## **LBTI user manual**\n\nfront", "_3_ _LBTI_\n\n#### **3.4 LMIRCam and ALES**\n\n"
+                            "Text with 55 _._ 0 ms and Full ~~I~~ mage.\n\n##### **3.4.2 LMIRCam Detector**\n\nDetector.\n\n12"])
+    assert "<!-- page: 2 -->" in body and "_3_ _LBTI_" not in body and "\n12" not in body
+    assert "55.0 ms" in body and "Full Image" in body
+    assert "## 3.4 LMIRCam and ALES" in body and "### 3.4.2 LMIRCam Detector" in body
