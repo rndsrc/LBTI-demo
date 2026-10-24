@@ -64,7 +64,7 @@ def cfg(tmp_path: Path) -> Config:
         (tmp_path / "content" / name).parent.mkdir(parents=True, exist_ok=True)
         (tmp_path / "content" / name).write_text(text)
     build_index(load_sections(tmp_path / "content"), tmp_path / "index", "v0.11")
-    return Config(content_dir=tmp_path / "content", index_dir=tmp_path / "index", max_searches=2)
+    return Config(content_dir=tmp_path / "content", index_dir=tmp_path / "index", max_searches=2, rate_per_hour=5)
 
 
 def text(t: str, cites: list[dict] | None = None) -> TextBlock:

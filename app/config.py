@@ -14,6 +14,9 @@ class Config:
     model: str = "claude-sonnet-5-5"   # ANTHROPIC_API_KEY is read by the anthropic SDK itself
     max_tokens: int = 2048             # per answer
     max_searches: int = 5              # per question, before an answer is forced
+    max_question_chars: int = 2000
+    max_turns: int = 20                # questions per conversation
+    rate_per_hour: int = 30            # questions per client IP, to protect the API key on a public demo
     content_dir: Path = ROOT / "content"
     index_dir: Path = ROOT / "index"
     pdf_url: str = "https://scienceops.lbto.org/wp-content/uploads/2024/05/LBTI_user_manual_v0.11.pdf"

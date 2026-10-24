@@ -3,6 +3,7 @@
   "use strict";
   const $ = (id) => document.getElementById(id);
   const el = (tag, cls, text) => Object.assign(document.createElement(tag), cls ? { className: cls } : {}, text ? { textContent: text } : {});
+  let conversationId = null;
   let controller = null;
 
   // Render the answer as sanitised Markdown, then turn [n] markers into citation chips.
@@ -80,11 +81,12 @@
     try {
       const response = await fetch("/api/chat", {
         method: "POST", headers: { "Content-Type": "application/json" }, signal: controller.signal,
-        body: JSON.stringify({ message: question }),
+        body: JSON.stringify({ message: question, conversation_id: conversationId }),
       });
       if (!response.ok) throw new Error((await response.json().catch(() => ({}))).detail || `Error ${response.status}`);
       for await (const [event, data] of events(response)) {
-        if (event === "status") { status.hidden = false; status.textContent = data.text; }
+        if (event === "meta") conversationId = data.conversation_id;
+        else if (event === "status") { status.hidden = false; status.textContent = data.text; }
         else if (event === "retract") msg.raw = "";
         else if (event === "text") { status.hidden = true; msg.raw += data.text; }
         else if (event === "sources") msg.sources = data.sources;
@@ -108,6 +110,7 @@
   $("stop").onclick = () => controller?.abort();
   $("new-chat").onclick = () => {
     controller?.abort();
+    conversationId = null;
     $("messages").replaceChildren();
     $("welcome").hidden = false;
   };

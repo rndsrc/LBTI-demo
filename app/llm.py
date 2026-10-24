@@ -60,17 +60,18 @@ class Chat:
         self.system = [{"type": "text", "text": prompt, "cache_control": CACHE}]
         self.tools = [{**SEARCH_TOOL, "cache_control": CACHE}]
 
-    async def answer(self, question: str, out: dict) -> AsyncIterator[dict]:
-        """Answer one question and yield events for the browser:
+    async def answer(self, history: list[dict], question: str, out: dict) -> AsyncIterator[dict]:
+        """Run one user turn and yield events for the browser:
             status   the search Claude is running
             text     answer text, with [n] markers after cited passages
             retract  drop the text so far: it was narration before a search, not the answer
             sources  the numbered list of cited sections
-        Fills `out` with the answer, the sources and the number of searches."""
-        messages = [{"role": "user", "content": question}]
+        Fills `out` with the new message history, the answer and the sources. History is only ever
+        appended to, so cached prefixes stay valid."""
+        messages = [*history, {"role": "user", "content": question}]
         sources: dict[str, dict] = {}   # source URL -> {n, source, title, cited_text}
         answer: list[str] = []
-        out.update(searches=0)
+        out.update(messages=messages, searches=0)
 
         for round_no in range(self.cfg.max_searches + 1):
             request = dict(model=self.cfg.model, max_tokens=self.cfg.max_tokens, system=self.system, tools=self.tools,
