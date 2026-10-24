@@ -71,5 +71,19 @@ You need Python 3.12 and an Anthropic API key. Then open <http://localhost:8000>
 ```bash
 make venv                                   # .venv with the dependencies
 echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
-make run                                    # serve with auto-reload
+make run                                    # index content/, then serve with auto-reload
 ```
+
+## The knowledge base
+
+```bash
+make ingest                 # crawl the site and the PDF (1 request/s); only changed files are rewritten
+git diff content/           # review what changed in the manual
+make index                  # rebuild index/kb.sqlite from content/ without crawling
+```
+
+- **New PDF release:** set `PDF_URL` and `PDF_VERSION` before `make ingest`.
+- **Corpus size:** `python -m scripts.ingest --offline --count-tokens` reports it with Claude's token
+  counter. Today it is **83,804 tokens**, 51,463 of them in the PDF.
+- **Section ids** are stable and readable, e.g. `web:lmircam-filters#narrowband-filters` or
+  `pdf:p55#4-7-overheads-time-request-and-execution-time`.

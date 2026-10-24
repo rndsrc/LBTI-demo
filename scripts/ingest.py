@@ -1,6 +1,9 @@
-"""Fetch the LBTI User's Manual (web pages + PDF) and convert it to Markdown in content/.
+"""Build the knowledge base: crawl the LBTI User's Manual (web pages + PDF), convert it to Markdown, split it
+into citable sections, and index them for full-text search with SQLite FTS5.
 
-    python -m scripts.ingest
+    python -m scripts.ingest                  # crawl the live site and PDF, then rebuild the index
+    python -m scripts.ingest --offline        # rebuild the index from the committed content/ (Docker build)
+    python -m scripts.ingest --count-tokens   # also report corpus size with the Claude token counter
 
 content/ is committed to git so changes to the manual show up as diffs. Files are rewritten only when
 their content changes.
@@ -12,7 +15,9 @@ import argparse
 import copy
 import datetime as dt
 import hashlib
+import json
 import re
+import sqlite3
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -361,19 +366,60 @@ def load_sections(content_dir: Path) -> list[Section]:
 
 
 # --------------------------------------------------------------------------------------------------
-# Entry point
+# Index
 # --------------------------------------------------------------------------------------------------
 
-def main() -> None:
-    argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter).parse_args()
-    cfg = Config.from_env()
-    import httpx
+def build_index(sections: list[Section], index_dir: Path, pdf_version: str) -> None:
+    """Write index/kb.sqlite: one FTS5 table of sections (title and text are searchable) and a meta table.
+    The new file replaces the old one only when complete."""
+    index_dir.mkdir(parents=True, exist_ok=True)
+    tmp = index_dir / "kb.sqlite.tmp"
+    tmp.unlink(missing_ok=True)
+    con = sqlite3.connect(tmp)
+    con.executescript("""
+        CREATE VIRTUAL TABLE sections USING fts5(id UNINDEXED, source_url UNINDEXED, title, paragraphs UNINDEXED,
+                                                 text, tokenize='porter unicode61');
+        CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT);""")
+    con.executemany("INSERT INTO sections VALUES (?, ?, ?, ?, ?)",
+                    [(s.id, s.source_url, s.title, json.dumps(s.paragraphs, ensure_ascii=False),
+                      "\n\n".join(s.paragraphs)) for s in sections])
+    con.executemany("INSERT INTO meta VALUES (?, ?)", [("ingested_at", now_iso()), ("pdf_version", pdf_version)])
+    con.commit()
+    con.close()
+    tmp.replace(index_dir / "kb.sqlite")
 
-    with httpx.Client(headers={"User-Agent": USER_AGENT}, timeout=30, follow_redirects=True) as client:
-        changed = crawl_web(cfg, client)
-        if fetch_pdf(cfg, client):
-            changed.append(cfg.pdf_url)
-    print("changed:", *changed or ["nothing"], sep="\n  ")
+
+def count_tokens(cfg: Config) -> None:
+    import anthropic
+
+    client = anthropic.Anthropic()
+    total = 0
+    for path in sorted(cfg.content_dir.glob("*/*.md")):
+        n = client.messages.count_tokens(model=cfg.model, messages=[{"role": "user", "content": read_doc(path)[1]}])
+        total += n.input_tokens
+        print(f"{n.input_tokens:>8,}  {path.stem}")
+    print(f"{total:>8,}  total ({cfg.model})")
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--offline", action="store_true", help="index the committed content/ without crawling")
+    ap.add_argument("--count-tokens", action="store_true", help="report token counts (needs ANTHROPIC_API_KEY)")
+    args = ap.parse_args()
+    cfg = Config.from_env()
+    if not args.offline:
+        import httpx
+
+        with httpx.Client(headers={"User-Agent": USER_AGENT}, timeout=30, follow_redirects=True) as client:
+            changed = crawl_web(cfg, client)
+            if fetch_pdf(cfg, client):
+                changed.append(cfg.pdf_url)
+        print("changed:", *changed or ["nothing"], sep="\n  ")
+    sections = load_sections(cfg.content_dir)
+    build_index(sections, cfg.index_dir, cfg.pdf_version)
+    print(f"indexed {len(sections)} sections into {cfg.index_dir / 'kb.sqlite'}")
+    if args.count_tokens:
+        count_tokens(cfg)
 
 
 if __name__ == "__main__":
