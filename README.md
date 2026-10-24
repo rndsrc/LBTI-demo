@@ -178,6 +178,9 @@ with a read-only filesystem, no Linux capabilities and `no-new-privileges`.
 
 **Publishing the image.**
 
+- **CI:** `.github/workflows/docker.yml` runs the tests on every push and pull request. On `main` and `v*`
+  tags it publishes `<DOCKERHUB_USERNAME>/lbti-demo` for amd64 and arm64, once you set the repository
+  variable `DOCKERHUB_USERNAME` and the secret `DOCKERHUB_TOKEN`.
 - **By hand:**
 
   ```bash
