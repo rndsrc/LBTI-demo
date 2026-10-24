@@ -1,4 +1,4 @@
-"""Shared fixtures. No network: saved manual pages and a scripted fake of the streaming Claude client."""
+"""Shared fixtures. No network: a tiny synthetic manual and a scripted fake of the streaming Claude client."""
 
 from __future__ import annotations
 
@@ -6,9 +6,66 @@ import copy
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
 from anthropic.types import TextBlock, Usage
 
+from app.config import Config
+from scripts.ingest import build_index, load_sections
+
 FIXTURES = Path(__file__).parent / "fixtures"
+
+PAGES = {
+    "web/nomic-filters.md": """---
+url: https://example.test/lbti/instrument-characteristics/nomic-filters/
+title: NOMIC filters
+breadcrumb: Instrument Characteristics › NOMIC filters
+---
+
+## Overview {#TOC-Overview}
+
+| Filter label | Filter wheel | λc [µm] | Range [µm] |
+| --- | --- | --- | --- |
+| Nprime | FW1 | 11.11 | 10.22 – 12.49 |
+""",
+    "web/lmircam-filters.md": """---
+url: https://example.test/lbti/instrument-characteristics/lmircam-filters/
+title: LMIRCam Filters
+breadcrumb: Instrument Characteristics › LMIRCam Filters
+---
+
+## Narrowband filters {#TOC-Narrowband-filters}
+
+| Filter Name | Filter Wheel | λc [µm] |
+| --- | --- | --- |
+| Br-alpha | FW2 | 4.05 |
+
+LMIRCam can be used together with NOMIC through the dichroic.
+""",
+    "pdf/LBTI_user_manual_v0.11.md": """---
+url: https://example.test/LBTI_user_manual_v0.11.pdf
+title: LBTI User's Manual (PDF v0.11)
+breadcrumb: LBTI User's Manual PDF v0.11
+---
+
+<!-- page: 5 -->
+
+# 4 Observing planning and execution
+
+## 4.7 Overheads
+
+Telescope preset 75 s; nulling alignment 1200 s.
+""",
+}
+
+
+@pytest.fixture
+def cfg(tmp_path: Path) -> Config:
+    for name, text in PAGES.items():
+        (tmp_path / "content" / name).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / "content" / name).write_text(text)
+    build_index(load_sections(tmp_path / "content"), tmp_path / "index", "v0.11")
+    return Config(content_dir=tmp_path / "content", index_dir=tmp_path / "index")
+
 
 def text(t: str, cites: list[dict] | None = None) -> TextBlock:
     return TextBlock.model_construct(type="text", text=t, citations=cites)
