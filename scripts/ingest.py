@@ -14,6 +14,7 @@ import datetime as dt
 import hashlib
 import re
 import time
+from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
@@ -271,6 +272,92 @@ def fetch_pdf(cfg: Config, client) -> bool:
             "breadcrumb": f"LBTI User's Manual PDF {cfg.pdf_version}", "version": cfg.pdf_version,
             "fetched_at": now_iso(), "source_sha256": digest}
     return write_doc(path, meta, clean_pdf_pages([c["text"] for c in chunks]))
+
+
+# --------------------------------------------------------------------------------------------------
+# Sections
+# --------------------------------------------------------------------------------------------------
+
+@dataclass
+class Section:
+    id: str                 # web:<slug>#<heading-slug> or pdf:p<page>#<heading-slug>
+    source_url: str         # page URL + #anchor, or PDF URL + #page=N
+    title: str              # breadcrumb › heading
+    paragraphs: list[str]   # citation units: one per paragraph, table or list
+
+
+_HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*(?:\{#([^}]+)\})?\s*$")
+_PAGE = re.compile(r"^<!-- page: (\d+) -->$")
+_LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
+
+
+def paragraphs_of(body: str) -> list[str]:
+    """One block per paragraph, table or list; minor headings (H4+) are attached to the block below them."""
+    blocks: list[str] = []
+    heading = ""
+    for chunk in re.split(r"\n\s*\n", body):
+        chunk = "\n".join(line for line in chunk.splitlines() if not _PAGE.match(line.strip())).strip()
+        if not chunk:
+            continue
+        if re.fullmatch(r"#{1,6} [^\n]*", chunk):
+            heading = f"{heading}\n{chunk}" if heading else chunk
+            continue
+        if heading:
+            chunk, heading = f"{heading}\n{chunk}", ""
+        if blocks and _LIST_ITEM.match(chunk) and _LIST_ITEM.match(blocks[-1].splitlines()[-1]):
+            blocks[-1] += "\n" + chunk
+        else:
+            blocks.append(chunk)
+    return blocks + [heading] if heading else blocks
+
+
+def split_sections(meta: dict, body: str, origin: str, doc: str) -> list[Section]:
+    """Sections on H2/H3 (and H1 chapters in the PDF). Text before the first heading is the page intro."""
+    levels = {1, 2, 3} if origin == "pdf" else {2, 3}
+    crumb = meta.get("breadcrumb") or meta.get("title") or doc
+    cur = {"heading": meta.get("title", doc), "anchor": None, "page": 1, "parents": [], "lines": []}
+    raw, stack, page = [cur], {}, 1
+    for line in body.splitlines():
+        if m := _PAGE.match(line.strip()):
+            page = int(m.group(1))
+        elif (m := _HEADING.match(line)) and len(m.group(1)) in levels:
+            level = len(m.group(1))
+            stack = {k: v for k, v in stack.items() if k < level}
+            cur = {"heading": m.group(2).strip(), "anchor": m.group(3), "page": page,
+                   "parents": [stack[k] for k in sorted(stack)], "lines": []}
+            stack[level] = cur["heading"]
+            raw.append(cur)
+            continue
+        cur["lines"].append(line)
+
+    sections, used = [], set()
+    for r in raw:
+        paras = paragraphs_of("\n".join(r["lines"]))
+        if not paras or (origin == "pdf" and r["heading"].lower() == "contents") \
+                or " ".join(paras).strip().lower() == "contents":
+            continue
+        base = f"web:{doc}#{slugify(r['heading'])}" if origin == "web" else f"pdf:p{r['page']}#{slugify(r['heading'])}"
+        sid, n = base, 2
+        while sid in used:
+            sid, n = f"{base}-{n}", n + 1
+        used.add(sid)
+        if origin == "web":
+            url = f"{meta['url']}#{r['anchor']}" if r["anchor"] else meta["url"]
+        else:
+            url = f"{meta['url']}#page={r['page']}"
+        path = [crumb] if r["heading"] == meta.get("title") else [crumb, *r["parents"], r["heading"]]
+        sections.append(Section(sid, url, " › ".join(dict.fromkeys(path)), paras))
+    return sections
+
+
+def load_sections(content_dir: Path) -> list[Section]:
+    order = {slug_for(u): i for i, u in enumerate(WEB_URLS)}
+    sections = []
+    for origin in ("web", "pdf"):
+        for path in sorted((content_dir / origin).glob("*.md"), key=lambda p: (order.get(p.stem, 999), p.stem)):
+            meta, body = read_doc(path)
+            sections += split_sections(meta, body, origin, path.stem)
+    return sections
 
 
 # --------------------------------------------------------------------------------------------------
